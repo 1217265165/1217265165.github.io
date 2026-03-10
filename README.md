@@ -26,7 +26,26 @@ cd 1217265165.github.io
 npm install
 ```
 
-> 首次克隆后必须执行，之后不需要重复执行（除非 `package.json` 有变化）。
+> `npm install` **不需要在后面写包名**。它会自动读取仓库根目录的 `package.json`，把里面列出的所有包全部下载安装好。
+>
+> 本项目 `package.json` 里已经写好了以下所有需要的包：
+>
+> | 包名 | 用途 |
+> |------|------|
+> | `hexo` | 博客框架核心 |
+> | `hexo-theme-anzhiyu` | AnZhiYu 主题 |
+> | `hexo-deployer-git` | 部署到 GitHub Pages |
+> | `hexo-server` | 本地预览服务器 |
+> | `hexo-renderer-marked` | 渲染 Markdown 文章 |
+> | `hexo-renderer-pug` | 渲染主题模板 |
+> | `hexo-renderer-stylus` | 渲染主题样式 |
+> | `hexo-generator-index` | 生成首页 |
+> | `hexo-generator-archive` | 生成归档页 |
+> | `hexo-generator-category` | 生成分类页 |
+> | `hexo-generator-tag` | 生成标签页 |
+> | `hexo-generator-searchdb` | 生成搜索数据 |
+>
+> 运行一次 `npm install` 后，以上所有包都会被安装到本地 `node_modules/` 文件夹中，之后不需要重复执行（除非 `package.json` 有变化）。
 
 ### 第三步：清除缓存并启动本地预览
 
