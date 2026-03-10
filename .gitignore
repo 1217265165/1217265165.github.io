@@ -4,3 +4,14 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# Hexo generated files
+public/
+.deploy_git/
+
+# Node dependencies
+node_modules/
+
+# Hexo debug files
+db.json
+*.log

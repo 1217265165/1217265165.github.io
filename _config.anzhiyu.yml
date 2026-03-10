@@ -1,0 +1,498 @@
+# AnZhiYu Theme Configuration
+# https://docs.anheyu.com/
+
+# 导航菜单
+menu:
+  首页: / || anzhiyu-icon-house
+  标签: /tags/ || anzhiyu-icon-tags
+  分类: /categories/ || anzhiyu-icon-shapes
+  归档: /archives/ || anzhiyu-icon-box-archive
+
+# Code Blocks (代码相关)
+highlight_theme: light #  darker / pale night / light / ocean / mac / mac light / false
+highlight_copy: true
+highlight_lang: true
+highlight_shrink: false
+highlight_height_limit: 330
+code_word_wrap: false
+
+# copy settings
+copy:
+  enable: true
+  copyright:
+    enable: false
+    limit_count: 50
+
+# social settings (社交图标)
+social:
+  # Github: https://github.com/1217265165 || anzhiyu-icon-github
+  # Telegram: https://t.me/ || anzhiyu-icon-telegram
+
+# Favicon
+favicon: /favicon.ico
+
+# Avatar (头像)
+avatar:
+  img: https://github.com/1217265165.png
+  effect: false
+
+# The banner image of home page
+index_img: false
+
+# Default top image
+default_top_img: false
+
+cover:
+  index_enable: true
+  aside_enable: true
+  archives_enable: true
+  position: left
+  default_cover:
+    - /img/default_cover.jpg
+
+# Replace Broken Images
+error_img:
+  flink: /img/friend_404.gif
+  post_page: /img/404.jpg
+
+# 404 page
+error_404:
+  enable: true
+  subtitle: "请尝试站内搜索寻找文章"
+  background: https://bu.dusays.com/2023/05/08/645907596997d.gif
+
+post_meta:
+  page:
+    date_type: created
+    date_format: simple
+    categories: true
+    tags: true
+    label: false
+  post:
+    date_type: both
+    date_format: date
+    categories: true
+    tags: true
+    label: true
+    unread: false
+
+# post copyright
+post_copyright:
+  enable: true
+  decode: false
+  author_href:
+  location: 长沙
+  license: CC BY-NC-SA 4.0
+  license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+  avatarSinks: false
+  copyright_author_link: /
+
+# Reward
+reward:
+  enable: false
+  QR_code: []
+
+# Related Articles
+related_post:
+  enable: true
+  limit: 6
+  date_type: created
+
+# figcaption
+photofigcaption: false
+
+# post_pagination
+post_pagination: 2
+
+# Share
+sharejs:
+  enable: true
+  sites: facebook,twitter,wechat,weibo,qq
+
+# Comments
+comments:
+  use:
+  text: true
+  lazyload: false
+  count: false
+  card_post_count: false
+
+# Twikoo
+twikoo:
+  envId:
+  region:
+  visitor: false
+  option:
+
+# Footer Settings
+footer:
+  owner:
+    enable: true
+    since: 2026
+  custom_text:
+  runtime:
+    enable: false
+  bdageitem:
+    enable: false
+    list:
+  footerBar:
+    enable: true
+    authorLink: /
+    cc:
+      enable: false
+    linkList:
+      - link: https://github.com/anzhiyu-c/hexo-theme-anzhiyu
+        text: 主题
+    subTitle:
+      enable: false
+      effect: true
+      startDelay: 300
+      typeSpeed: 150
+      backSpeed: 50
+      loop: true
+      source: 1
+      sub:
+
+# Baidu Analytics
+baidu_analytics:
+
+# Google Analytics
+google_analytics:
+
+# Site Verification
+site_verification:
+  - name: google-site-verification
+    content: xxx
+  - name: baidu-site-verification
+    content: code-xxx
+  - name: msvalidate.01
+    content: xxx
+
+# Theme color
+theme_color:
+  enable: true
+  main: "#425AEF"
+  dark_main: "#f2b94b"
+  paginator: "#425AEF"
+  text_selection: "#2128bd"
+  link_color: "var(--anzhiyu-fontcolor)"
+  meta_color: "var(--anzhiyu-fontcolor)"
+  hr_color: "#4259ef23"
+  code_foreground: "#fff"
+  code_background: "var(--anzhiyu-code-stress)"
+  toc_color: "#425AEF"
+  scrollbar_color: "var(--anzhiyu-scrollbar)"
+  meta_theme_color_light: "#f7f9fe"
+  meta_theme_color_dark: "#18171d"
+
+# 移动端侧栏
+sidebar:
+  site_data:
+    archive: true
+    tag: true
+    category: true
+  menus_items: true
+  tags_cloud: true
+  display_mode: true
+  nav_menu_project: true
+
+# 首页双栏显示
+article_double_row: true
+
+# Footer Background
+footer_bg: false
+
+# Display mode
+display_mode: light
+
+# Beautify
+beautify:
+  enable: true
+  field: post
+  title-prefix-icon: '\f0c1'
+  title-prefix-icon-color: "#F47466"
+
+# Font settings
+font:
+  global-font-size: 16px
+  code-font-size:
+  font-family:
+  code-font-family: consolas, Menlo, "PingFang SC", "Microsoft JhengHei", "Microsoft YaHei", sans-serif
+
+blog_title_font:
+  font_link:
+  font-family: PingFang SC, 'Hiragino Sans GB', 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif
+
+# Divider icon
+hr_icon:
+  enable: true
+  icon: \f0c4
+  icon-top:
+
+# Subtitle on homepage
+subtitle:
+  enable: false
+  effect: true
+  startDelay: 300
+  typeSpeed: 150
+  backSpeed: 50
+  loop: true
+  source: 1
+  sub:
+
+# Loading Animation
+preloader:
+  enable: true
+  source: 3
+  pace_css_url:
+  avatar: https://github.com/1217265165.png
+
+# Aside (侧边栏)
+aside:
+  enable: true
+  hide: false
+  button: true
+  mobile: true
+  position: right
+  display:
+    archive: true
+    tag: true
+    category: true
+  card_author:
+    enable: true
+    description: 欢迎来到我的博客
+    name_link: /
+  card_announcement:
+    enable: false
+    content: 欢迎来看我的博客鸭~
+  card_weixin:
+    enable: false
+  card_recent_post:
+    enable: true
+    limit: 5
+    sort: date
+    sort_order:
+  card_categories:
+    enable: false
+    limit: 8
+    expand: none
+    sort_order:
+  card_tags:
+    enable: true
+    limit: 40
+    color: false
+    sort_order:
+    highlightTags:
+  card_archives:
+    enable: true
+    type: monthly
+    format: MMMM YYYY
+    order: -1
+    limit: 8
+    sort_order:
+  card_webinfo:
+    enable: true
+    post_count: true
+    last_push_date: false
+    sort_order:
+
+# busuanzi count
+busuanzi:
+  site_uv: false
+  site_pv: false
+  page_pv: false
+
+# Runtime
+runtimeshow:
+  enable: false
+
+# Newest Comments
+newest_comments:
+  enable: false
+
+# Simplified/Traditional Chinese translate
+translate:
+  enable: true
+  default: 繁
+  rightMenuMsgDefault: "轉為繁體"
+  defaultEncoding: 2
+  translateDelay: 0
+  msgToTraditionalChinese: "繁"
+  msgToSimplifiedChinese: "简"
+  rightMenuMsgToTraditionalChinese: "转为繁体"
+  rightMenuMsgToSimplifiedChinese: "转为简体"
+
+# Read Mode
+readmode: true
+
+# Center Console
+centerConsole:
+  enable: true
+  card_tags:
+    enable: true
+    limit: 40
+    color: false
+    sort_order:
+    highlightTags:
+  card_archives:
+    enable: true
+    type: monthly
+    format: MMMM YYYY
+    order: -1
+    limit: 8
+    sort_order:
+
+# Dark mode
+darkmode:
+  enable: true
+  button: true
+  autoChangeMode: 1
+  start:
+  end:
+
+# Lightbox
+medium_zoom: false
+fancybox: true
+
+# Note
+note:
+  style: flat
+  icons: true
+  border_radius: 3
+  light_bg_offset: 0
+
+icons:
+  ali_iconfont_js:
+  fontawesome: false
+  fontawesome_animation_css:
+
+# Pjax
+pjax:
+  enable: true
+  exclude:
+
+# Music player
+aplayerInject:
+  enable: true
+  per_page: true
+
+# Snackbar
+snackbar:
+  enable: true
+  position: top-center
+  bg_light: "#425AEF"
+  bg_dark: "#1f1f1f"
+
+# Prefetch
+instantpage: true
+
+# Lazyload
+lazyload:
+  enable: true
+  field: site
+  placeholder:
+  blur: true
+  progressive: true
+
+# Open Graph
+Open_Graph_meta: true
+
+# CSS prefix
+css_prefix: true
+
+# Home top configuration
+home_top:
+  enable: true
+  timemode: date
+  title: 随便逛逛
+  subTitle: →
+  siteText: 1217265165.github.io
+  category:
+    - name: 前端
+      path: /categories/前端/
+      shadow: var(--anzhiyu-shadow-blue)
+      class: blue
+      icon: anzhiyu-icon-dove
+    - name: 大学
+      path: /categories/大学/
+      shadow: var(--anzhiyu-shadow-red)
+      class: red
+      icon: anzhiyu-icon-fire
+    - name: 生活
+      path: /categories/生活/
+      shadow: var(--anzhiyu-shadow-green)
+      class: green
+      icon: anzhiyu-icon-book
+  default_descr: 再怎么看我也不知道怎么描述它的啦！
+  swiper:
+    enable: false
+  banner:
+    tips: 新品主题
+    title: Theme-AnZhiYu
+    image: https://bu.dusays.com/2023/05/13/645fa3cf90d70.webp
+    link: https://docs.anheyu.com/
+
+# People Canvas
+peoplecanvas:
+  enable: true
+  img: https://upload-bbs.miyoushe.com/upload/2024/07/27/125766904/ba62475f396df9de3316a08ed9e65d86_5680958632268053399..png
+
+# Dynamic effects
+dynamicEffect:
+  postTopWave: true
+  postTopRollZoomInfo: false
+  pageCommentsRollZoom: false
+
+# Tag label title
+diytitle:
+  enable: true
+  leaveTitle: w(ﾟДﾟ)w 不要走！再看看嘛！
+  backTitle: ♪(^∇^*)欢迎肥来！
+
+# AI description
+post_head_ai_description:
+  enable: true
+  gptName: AnZhiYu
+  mode: local
+  switchBtn: false
+  btnLink: https://afdian.net/item/886a79d4db6711eda42a52540025c377
+  randomNum: 3
+  basicWordCount: 1000
+  key: xxxx
+  Referer: https://xx.xx/
+
+# Music player
+nav_music:
+  enable: true
+  console_widescreen_music: false
+  id: 8152976493
+  server: netease
+  volume: 0.7
+  all_playlist: https://y.qq.com/n/ryqq/playlist/8802438608
+
+music_page_default: nav_music
+
+# Post tool
+ptool:
+  enable: true
+  share_mobile: true
+  share_weibo: true
+  share_copyurl: true
+  categories: false
+  mode:
+
+# Universe (dark mode particles)
+universe:
+  enable: true
+
+# Console
+console:
+  enable: true
+
+# CDN
+CDN:
+  internal_provider: local
+  third_party_provider: cbd
+  version: true
+  custom_format:
+  option:
