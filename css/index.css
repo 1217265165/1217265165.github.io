@@ -20392,8 +20392,8 @@ html.hide-aside .layout > div:first-child {
   }
 }
 
-#aside-content .card-widget#card-wechat {
-  background: #57bd6a;
+#aside-content .card-widget#card-telegram {
+  background: #0088cc;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -20402,8 +20402,8 @@ html.hide-aside .layout > div:first-child {
   border: none;
   height: 110px;
 }
-[data-theme="dark"] #aside-content .card-widget#card-wechat {
-  background-color: #121121;
+[data-theme="dark"] #aside-content .card-widget#card-telegram {
+  background-color: #0077b5;
   border: var(--style-border);
 }
 
