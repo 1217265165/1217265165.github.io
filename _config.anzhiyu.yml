@@ -89,8 +89,14 @@ post_copyright:
 
 # Reward
 reward:
-  enable: false
-  QR_code: []
+  enable: true
+  QR_code:
+    - img: https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png
+      link:
+      text: 微信
+    - img: https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png
+      link:
+      text: 支付宝
 
 # Related Articles
 related_post:
@@ -267,6 +273,10 @@ aside:
     content: 欢迎来看我的博客鸭~
   card_weixin:
     enable: false
+  card_telegram:
+    enable: true
+    url: https://t.me/+_xmrD69vLCVhMjMx
+    label: 加入 Telegram
   card_recent_post:
     enable: true
     limit: 5
