@@ -1,0 +1,15 @@
+/* Banner 入口强化 */
+#todayCard {
+  border: 1px solid rgba(73, 177, 245, 0.2);
+  transition: all 0.3s ease;
+}
+#todayCard:hover {
+  border-color: #49b1f5;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(73, 177, 245, 0.15);
+}
+
+/* 格言切换过渡 */
+#todayCard .todayCard-tips {
+  transition: opacity 0.4s ease;
+}

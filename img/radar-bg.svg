@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <style>
+      .grid { stroke: #49b1f5; stroke-opacity: 0.15; fill: none; }
+      .axis { stroke: #49b1f5; stroke-opacity: 0.2; stroke-width: 0.5; }
+      .data { stroke: #49b1f5; stroke-width: 1.5; fill: #49b1f5; fill-opacity: 0.1; }
+      .label { font-family: sans-serif; font-size: 7px; fill: #49b1f5; fill-opacity: 0.6; text-anchor: middle; }
+      .dot { fill: #49b1f5; fill-opacity: 0.5; }
+    </style>
+  </defs>
+  <!-- Grid rings -->
+  <polygon class="grid" points="100,40 157.1,81.5 135.3,147 64.7,147 42.9,81.5"/>
+  <polygon class="grid" points="100,55 143.6,86.8 125.9,138 74.1,138 56.4,86.8"/>
+  <polygon class="grid" points="100,70 130,92 116.5,129 83.5,129 70,92"/>
+  <polygon class="grid" points="100,85 116.5,97.5 107,120 93,120 83.5,97.5"/>
+  <!-- Axes -->
+  <line class="axis" x1="100" y1="100" x2="100" y2="40"/>
+  <line class="axis" x1="100" y1="100" x2="157.1" y2="81.5"/>
+  <line class="axis" x1="100" y1="100" x2="135.3" y2="147"/>
+  <line class="axis" x1="100" y1="100" x2="64.7" y2="147"/>
+  <line class="axis" x1="100" y1="100" x2="42.9" y2="81.5"/>
+  <!-- Data: Algorithms 85%, C++/Qt 80%, Python 75%, HBRB 90%, Gemini API 65% -->
+  <polygon class="data" points="100,49 146.6,85.2 126.7,140.1 72.1,140.1 52.1,86.8"/>
+  <circle class="dot" cx="100" cy="49" r="2.5"/>
+  <circle class="dot" cx="146.6" cy="85.2" r="2.5"/>
+  <circle class="dot" cx="126.7" cy="140.1" r="2.5"/>
+  <circle class="dot" cx="72.1" cy="140.1" r="2.5"/>
+  <circle class="dot" cx="52.1" cy="86.8" r="2.5"/>
+  <!-- Labels -->
+  <text class="label" x="100" y="33">Algorithms</text>
+  <text class="label" x="165" y="80">C++/Qt</text>
+  <text class="label" x="142" y="158">Python</text>
+  <text class="label" x="58" y="158">HBRB</text>
+  <text class="label" x="35" y="80">Gemini API</text>
+</svg>
