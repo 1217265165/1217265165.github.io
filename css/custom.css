@@ -109,3 +109,21 @@
     font-size: 12px;
   }
 }
+
+/* ===== 侧栏头像：大小与悬停固定 ===== */
+:root {
+  --my-avatar-size: 150px;
+}
+
+#aside-content .card-info .author-info-avatar,
+#aside-content .card-info .avatar-img {
+  width: var(--my-avatar-size) !important;
+  height: var(--my-avatar-size) !important;
+}
+
+/* 覆盖主题默认 hover：鼠标移入时头像不缩小、不消失 */
+#aside-content .card-info:hover .author-info-avatar,
+#aside-content .card-info:hover .author-status {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
