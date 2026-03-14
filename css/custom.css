@@ -489,6 +489,20 @@ a.product-item:hover {
   font-size: 0.8rem;
   line-height: 1.75;
   color: var(--anzhiyu-secondfont);
+
+.shop-v3-foot .shop-alt-buy {
+  margin-left: 8px;
+  background: transparent;
+  color: #3f74b7;
+  border: 1px dashed rgba(63, 116, 183, 0.35);
+  box-shadow: none;
+}
+
+.shop-v3-foot .shop-alt-buy:hover {
+  background: rgba(63, 116, 183, 0.08);
+  color: #2d5d96;
+  box-shadow: none;
+}
 }
 
 /* ===== Shop V2: clean, compact, purchasable ===== */
