@@ -166,8 +166,8 @@
 
 #card-shop .item-headline {
   width: 100%;
-  padding-right: 132px;
-  min-height: 34px;
+  padding-right: 124px;
+  min-height: 38px;
   display: flex;
   align-items: center;
 }
@@ -229,14 +229,14 @@
 
 #card-shop .enter-shop-btn {
   position: absolute;
-  top: 14px;
-  right: 12px;
+  top: 18px;
+  right: 14px;
   min-width: auto;
   text-align: center;
-  padding: 7px 12px;
-  border-radius: 12px;
+  padding: 8px 14px;
+  border-radius: 14px;
   font-size: 12px;
-  line-height: 1;
+  line-height: 1.1;
   background: linear-gradient(135deg, #49b1f5, #00d4ff);
   box-shadow: 0 4px 15px rgba(73, 177, 245, 0.25);
   border: 0;
@@ -259,9 +259,14 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-decoration: none !important;
+
+.shop-v3-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
   box-shadow: 0 2px 10px var(--anzhiyu-main-op);
-}
 
 .enter-shop-btn:hover {
   transform: translateY(-2px);
