@@ -159,15 +159,17 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  position: relative;
+  position: static;
   z-index: 1;
   gap: 2px;
 }
 
 #card-shop .item-headline {
   width: 100%;
-  padding-right: 118px;
-  min-height: 30px;
+  padding-right: 132px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
 }
 
 #card-shop .item-headline span {
@@ -227,11 +229,11 @@
 
 #card-shop .enter-shop-btn {
   position: absolute;
-  top: 2px;
+  top: 14px;
   right: 12px;
   min-width: auto;
   text-align: center;
-  padding: 6px 11px;
+  padding: 7px 12px;
   border-radius: 12px;
   font-size: 12px;
   line-height: 1;
