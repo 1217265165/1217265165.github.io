@@ -166,6 +166,7 @@
 
 #card-shop .item-headline {
   width: 100%;
+  padding-right: 118px;
 }
 
 #card-shop .item-headline span {
@@ -175,7 +176,7 @@
 #card-shop .shop-subtitle {
   font-size: 12px;
   color: #888;
-  margin: 4px 0 10px;
+  margin: 6px 0 0;
   letter-spacing: 0.03em;
 }
 
@@ -184,7 +185,7 @@
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  margin: 10px 0 12px;
+  margin: 8px 0 8px;
   padding: 2px 0;
 }
 
@@ -224,10 +225,15 @@
 }
 
 #card-shop .enter-shop-btn {
-  min-width: 132px;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  min-width: auto;
   text-align: center;
-  padding: 9px 16px;
-  border-radius: 999px;
+  padding: 6px 11px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1;
   background: linear-gradient(135deg, #49b1f5, #00d4ff);
   box-shadow: 0 4px 15px rgba(73, 177, 245, 0.25);
   border: 0;
