@@ -129,44 +129,87 @@
 }
 
 /* ===== 侧边栏小店卡片 ===== */
+#card-shop {
+  position: relative;
+  overflow: hidden;
+}
+
+#card-shop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, rgba(73, 177, 245, 0.08), rgba(66, 90, 239, 0.03) 42%, rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+#card-shop .item-content {
+  position: relative;
+  z-index: 1;
+}
+
 #card-shop .shop-subtitle {
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: var(--anzhiyu-secondfont);
-  margin: 2px 0 14px;
-  letter-spacing: 0.04em;
+  margin: 4px 0 16px;
+  letter-spacing: 0.03em;
 }
 
 #card-shop .shop-payment-icons {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 14px;
-  padding: 6px 0;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 2px 0;
 }
 
 #card-shop .shop-pay-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  max-width: 30px;
-  border-radius: 8px;
-  background: var(--anzhiyu-white-op);
-  color: var(--anzhiyu-main);
+  width: 42px;
+  height: 42px;
+  max-width: 42px;
+  border-radius: 12px;
+  background: var(--anzhiyu-secondbg);
+  border: 1px solid var(--style-border-always);
+  color: #4963ea;
   cursor: default;
-  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 3px 10px rgba(70, 88, 170, 0.08);
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 #card-shop .shop-pay-item:hover {
-  transform: translateY(-2px);
-  background: var(--anzhiyu-main-op);
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(73, 177, 245, 0.55);
+  box-shadow: 0 8px 16px rgba(73, 177, 245, 0.2);
 }
 
 #card-shop .shop-pay-item svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
+}
+
+#card-shop .shop-pay-item:nth-child(1) {
+  color: #2d5df6;
+}
+
+#card-shop .shop-pay-item:nth-child(2) {
+  color: #1ea35f;
+}
+
+#card-shop .shop-pay-item:nth-child(3) {
+  color: #3559da;
+}
+
+#card-shop .shop-pay-item:nth-child(4) {
+  color: #7a56e8;
+}
+
+#card-shop .enter-shop-btn {
+  min-width: 130px;
+  text-align: center;
 }
 
 /* "立即进入"/ "立即获取" 按钮 */
