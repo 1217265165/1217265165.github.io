@@ -127,3 +127,93 @@
   opacity: 1 !important;
   transform: scale(1) !important;
 }
+
+/* ===== 侧边栏小店卡片 ===== */
+#card-shop .shop-subtitle {
+  font-size: 0.82rem;
+  color: var(--anzhiyu-secondfont);
+  margin: -4px 0 12px;
+  letter-spacing: 0.04em;
+}
+
+#card-shop .shop-payment-icons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+#card-shop .shop-pay-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--anzhiyu-white-op);
+  color: var(--anzhiyu-main);
+  cursor: default;
+  transition: transform 0.2s, background 0.2s;
+}
+
+#card-shop .shop-pay-item:hover {
+  transform: translateY(-2px);
+  background: var(--anzhiyu-main-op);
+}
+
+#card-shop .shop-pay-item svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* "立即进入"按钮 —— 复用样式，Banner 也用 */
+.enter-shop-btn {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background: var(--anzhiyu-main);
+  color: #fff !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none !important;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 2px 10px var(--anzhiyu-main-op);
+}
+
+.enter-shop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--anzhiyu-main-op);
+  background: var(--anzhiyu-theme);
+}
+
+/* ===== Banner 小店按钮微脉冲（吸引注意但不烦人）===== */
+.categoryGroup .categoryItem:last-child .categoryButton {
+  animation: shop-pulse 3s ease-in-out infinite;
+}
+
+@keyframes shop-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(66, 90, 239, 0); }
+  50%       { box-shadow: 0 0 0 5px rgba(66, 90, 239, 0.18); }
+}
+
+/* ===== 小店页面头部 ===== */
+.shop-page-header {
+  background: linear-gradient(135deg, var(--anzhiyu-main), #6c8ff5);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+.shop-page-header h2 {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.shop-page-header p {
+  margin: 0;
+  opacity: 0.92;
+  font-size: 0.95rem;
+}
