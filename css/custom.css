@@ -167,6 +167,7 @@
 #card-shop .item-headline {
   width: 100%;
   padding-right: 118px;
+  min-height: 30px;
 }
 
 #card-shop .item-headline span {
@@ -226,7 +227,7 @@
 
 #card-shop .enter-shop-btn {
   position: absolute;
-  top: 10px;
+  top: 2px;
   right: 12px;
   min-width: auto;
   text-align: center;
