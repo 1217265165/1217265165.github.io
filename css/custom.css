@@ -158,9 +158,10 @@
 #card-shop .item-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   z-index: 1;
+  gap: 2px;
 }
 
 #card-shop .item-headline {
@@ -174,16 +175,16 @@
 #card-shop .shop-subtitle {
   font-size: 12px;
   color: #888;
-  margin: 4px 0 14px;
+  margin: 4px 0 10px;
   letter-spacing: 0.03em;
 }
 
 #card-shop .shop-payment-icons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 15px;
-  margin: 15px 0;
+  gap: 10px;
+  margin: 10px 0 12px;
   padding: 2px 0;
 }
 
@@ -191,27 +192,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  max-width: 42px;
-  border-radius: 12px;
-  background: var(--anzhiyu-secondbg);
+  width: 38px;
+  height: 38px;
+  max-width: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.55);
   border: 1px solid var(--style-border-always);
-  color: #4963ea;
+  color: var(--anzhiyu-secondfont);
   cursor: default;
-  box-shadow: 0 3px 10px rgba(70, 88, 170, 0.08);
+  box-shadow: 0 2px 8px rgba(70, 88, 170, 0.06);
   transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 #card-shop .shop-pay-item:hover {
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-2px);
+  color: var(--anzhiyu-main);
   border-color: rgba(73, 177, 245, 0.55);
-  box-shadow: 0 8px 16px rgba(73, 177, 245, 0.2);
+  box-shadow: 0 6px 14px rgba(73, 177, 245, 0.16);
 }
 
 #card-shop .shop-pay-item svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   filter: grayscale(100%) opacity(0.6);
   transition: filter 0.2s ease;
@@ -221,27 +223,13 @@
   filter: grayscale(0%) opacity(1);
 }
 
-#card-shop .shop-pay-item:nth-child(1) {
-  color: #2d5df6;
-}
-
-#card-shop .shop-pay-item:nth-child(2) {
-  color: #1ea35f;
-}
-
-#card-shop .shop-pay-item:nth-child(3) {
-  color: #3559da;
-}
-
-#card-shop .shop-pay-item:nth-child(4) {
-  color: #7a56e8;
-}
-
 #card-shop .enter-shop-btn {
-  min-width: 148px;
+  min-width: 132px;
   text-align: center;
+  padding: 9px 16px;
+  border-radius: 999px;
   background: linear-gradient(135deg, #49b1f5, #00d4ff);
-  box-shadow: 0 4px 15px rgba(73, 177, 245, 0.3);
+  box-shadow: 0 4px 15px rgba(73, 177, 245, 0.25);
   border: 0;
 }
 
