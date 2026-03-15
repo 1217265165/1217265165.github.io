@@ -1,3 +1,6 @@
+/* Worker API base URL */
+var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
+
 /* 动态格言轮播 - Banner subtitle */
 (function () {
   var quotes = [
@@ -143,7 +146,7 @@
     if (!container) return;
 
     try {
-      var response = await fetch('/api/products', {
+      var response = await fetch(WORKER_BASE + '/api/products', {
         method: 'GET',
         headers: {
           'cache-control': 'no-store'
@@ -272,7 +275,7 @@
         button.textContent = '跳转支付中...';
 
         try {
-          var response = await fetch('/api/create-checkout-session', {
+          var response = await fetch(WORKER_BASE + '/api/create-checkout-session', {
             method: 'POST',
             headers: {
               'content-type': 'application/json'
@@ -313,7 +316,7 @@
     statusEl.textContent = '正在核验支付状态并加载交付内容...';
 
     try {
-      var response = await fetch('/api/delivery?session_id=' + encodeURIComponent(sessionId), {
+      var response = await fetch(WORKER_BASE + '/api/delivery?session_id=' + encodeURIComponent(sessionId), {
         method: 'GET',
         headers: {
           'cache-control': 'no-store'
