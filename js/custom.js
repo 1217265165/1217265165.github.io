@@ -243,10 +243,12 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
       copyButton.textContent = '复制';
       copyButton.addEventListener('click', function () {
         copyText(delivery.code || '').then(function () {
-          copyButton.textContent = '已复制';
+          copyButton.textContent = '已复制 ✓';
+          copyButton.classList.add('copied');
           setTimeout(function () {
             copyButton.textContent = '复制';
-          }, 1500);
+            copyButton.classList.remove('copied');
+          }, 2000);
         });
       });
       codeWrap.appendChild(copyButton);
@@ -298,6 +300,15 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
     });
   }
 
+  function setBadge(page, state) {
+    var badge = page.querySelector('[data-delivery-badge]');
+    if (!badge) return;
+    badge.className = 'shop-delivery-badge ' + state;
+    if (state === 'loading') { badge.textContent = '···'; }
+    else if (state === 'success') { badge.textContent = '✓'; }
+    else if (state === 'error') { badge.textContent = '✕'; }
+  }
+
   async function loadDelivery() {
     var page = document.querySelector('[data-shop-delivery-page]');
     if (!page) return;
@@ -309,11 +320,14 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
     var contentEl = page.querySelector('[data-delivery-content]');
 
     if (!sessionId) {
-      statusEl.textContent = '缺少 session_id，无法读取自动发货内容。';
+      setBadge(page, 'error');
+      titleEl.textContent = '无法读取发货信息';
+      statusEl.textContent = '缺少 session_id 参数，请通过支付成功页面的链接访问。';
       return;
     }
 
-    statusEl.textContent = '正在核验支付状态并加载交付内容...';
+    setBadge(page, 'loading');
+    statusEl.textContent = '正在核验支付状态，请稍候…';
 
     try {
       var response = await fetch(WORKER_BASE + '/api/delivery?session_id=' + encodeURIComponent(sessionId), {
@@ -328,12 +342,14 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
         throw new Error(data.error || '自动发货失败');
       }
 
-      titleEl.textContent = data.productName;
+      setBadge(page, 'success');
+      titleEl.textContent = data.productName || '交付内容';
+      statusEl.textContent = '支付已确认 · 以下为您的交付内容，请妥善保存';
       renderDeliveryContent(contentEl, data.delivery);
-      statusEl.textContent = '支付已确认，以下为自动发货内容。';
-      page.classList.add('is-loaded');
     } catch (error) {
-      statusEl.textContent = error instanceof Error ? error.message : '自动发货失败';
+      setBadge(page, 'error');
+      titleEl.textContent = '发货出现问题';
+      statusEl.textContent = error instanceof Error ? error.message : '自动发货失败，请联系客服';
     }
   }
 
