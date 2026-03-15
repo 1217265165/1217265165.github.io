@@ -783,6 +783,30 @@ a.product-item:hover {
   box-shadow: 0 7px 14px rgba(73, 177, 245, 0.35);
 }
 
+.shop-checkout-btn {
+  display: inline-block;
+  padding: 6px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: #49b1f5;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, opacity .2s ease;
+}
+
+.shop-checkout-btn:hover {
+  background: #2f9fe8;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 14px rgba(73, 177, 245, 0.35);
+}
+
+.shop-checkout-btn:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
 .shop-v3-tip {
   margin-top: 14px;
   padding: 10px 12px;
@@ -791,4 +815,90 @@ a.product-item:hover {
   color: var(--anzhiyu-secondfont);
   font-size: 0.8rem;
   line-height: 1.65;
+}
+
+.shop-delivery-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 8px 0 24px;
+}
+
+.shop-delivery-panel {
+  background: var(--anzhiyu-card-bg);
+  border: 1px solid var(--style-border-always);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 18px 40px rgba(24, 39, 75, 0.08);
+}
+
+.shop-delivery-status {
+  margin: 10px 0 0;
+  color: var(--anzhiyu-secondfont);
+  line-height: 1.7;
+}
+
+.shop-delivery-content {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--anzhiyu-secondbg);
+  color: var(--anzhiyu-fontcolor);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 120px;
+}
+
+.shop-delivery-item-title {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--anzhiyu-fontcolor);
+}
+
+.shop-delivery-item-note {
+  margin: 12px 0 0;
+  color: var(--anzhiyu-secondfont);
+  line-height: 1.75;
+}
+
+.shop-delivery-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #49b1f5, #2f9fe8);
+  color: #fff !important;
+  text-decoration: none !important;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(73, 177, 245, 0.24);
+}
+
+.shop-delivery-code-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.shop-delivery-code {
+  display: inline-block;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(73, 177, 245, 0.08);
+  color: #1d4ed8;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.shop-delivery-copy {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: var(--anzhiyu-card-bg);
+  color: var(--anzhiyu-fontcolor);
+  box-shadow: inset 0 0 0 1px var(--style-border-always);
+  cursor: pointer;
 }
