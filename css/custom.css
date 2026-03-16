@@ -229,8 +229,8 @@
 
 #card-shop .enter-shop-btn {
   position: absolute;
-  top: 18px;
-  right: 14px;
+  top: 22px;
+  right: 20px;
   min-width: auto;
   text-align: center;
   padding: 8px 14px;
@@ -251,7 +251,7 @@
 /* "立即进入"/ "立即获取" 按钮 */
 .enter-shop-btn {
   display: inline-block;
-  padding: 8px 20px;
+  padding: 10px 20px;
   border-radius: 20px;
   background: var(--anzhiyu-main);
   color: #fff !important;
