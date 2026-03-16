@@ -47,6 +47,21 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
 })();
 
 (function () {
+  async function readJsonResponse(response) {
+    var text = await response.text();
+    if (!text) {
+      return {};
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      return {
+        error: '接口返回了非 JSON 响应'
+      };
+    }
+  }
+
   function formatPrice(amount, currency) {
     var major = Number(amount || 0) / 100;
     if (String(currency || '').toLowerCase() === 'cny') {
@@ -152,10 +167,10 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
           'cache-control': 'no-store'
         }
       });
-      var data = await response.json();
+      var data = await readJsonResponse(response);
 
       if (!response.ok) {
-        throw new Error(data.error || '加载商品失败');
+        throw new Error(data.error || ('加载商品失败（HTTP ' + response.status + '）'));
       }
 
       renderShopProducts(container, data.products || [], data.currency || 'cny');
@@ -285,9 +300,9 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
             body: JSON.stringify({ productId: productId })
           });
 
-          var data = await response.json();
+          var data = await readJsonResponse(response);
           if (!response.ok || !data.url) {
-            throw new Error(data.error || '创建支付会话失败');
+            throw new Error(data.error || ('创建支付会话失败（HTTP ' + response.status + '）'));
           }
 
           window.location.href = data.url;
@@ -336,10 +351,10 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
           'cache-control': 'no-store'
         }
       });
-      var data = await response.json();
+      var data = await readJsonResponse(response);
 
       if (!response.ok) {
-        throw new Error(data.error || '自动发货失败');
+        throw new Error(data.error || ('自动发货失败（HTTP ' + response.status + '）'));
       }
 
       setBadge(page, 'success');
