@@ -86,6 +86,18 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
     return productId === 'hbrb' ? '热销' : '自动发货';
   }
 
+  function getInventoryLabel(product) {
+    if (typeof product.inventoryLabel === 'string' && product.inventoryLabel) {
+      return product.inventoryLabel;
+    }
+
+    if (Number.isFinite(product.inventory)) {
+      return '剩余 ' + product.inventory + ' 份';
+    }
+
+    return '';
+  }
+
   function renderShopProducts(container, products, currency) {
     container.innerHTML = '';
 
@@ -129,8 +141,20 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
       var foot = document.createElement('div');
       foot.className = 'shop-v3-foot';
 
+      var meta = document.createElement('div');
+      meta.className = 'shop-v3-meta';
+
       var price = document.createElement('strong');
       price.textContent = formatPrice(product.amount, currency);
+      meta.appendChild(price);
+
+      var inventoryLabel = getInventoryLabel(product);
+      if (inventoryLabel) {
+        var stock = document.createElement('span');
+        stock.className = product.soldOut ? 'shop-v3-stock sold-out' : 'shop-v3-stock';
+        stock.textContent = inventoryLabel;
+        meta.appendChild(stock);
+      }
 
       var actions = document.createElement('div');
       actions.className = 'shop-v3-actions';
@@ -139,10 +163,13 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
       button.className = 'shop-checkout-btn';
       button.type = 'button';
       button.setAttribute('data-product-id', product.id);
-      button.textContent = product.buttonText || 'Stripe 自动发货';
+      button.textContent = product.soldOut ? '库存不足' : (product.buttonText || 'Stripe 自动发货');
+      if (product.soldOut) {
+        button.disabled = true;
+      }
 
       actions.appendChild(button);
-      foot.appendChild(price);
+      foot.appendChild(meta);
       foot.appendChild(actions);
 
       body.appendChild(badge);
@@ -377,4 +404,225 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
   document.addEventListener('DOMContentLoaded', initShopAutomation);
   document.addEventListener('pjax:complete', initShopAutomation);
   if (document.readyState !== 'loading') initShopAutomation();
+})();
+
+/* Local Search fallback: ensure popup search works even when theme parser misses matches */
+(function () {
+  var fallbackDataPromise = null;
+
+  function forceCloseSearchPopup() {
+    var dialog = document.querySelector('#local-search .search-dialog');
+    var mask = document.getElementById('search-mask');
+
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+
+    if (dialog) {
+      dialog.style.animation = 'none';
+      dialog.style.display = 'none';
+    }
+
+    if (mask) {
+      mask.style.animation = 'none';
+      mask.style.display = 'none';
+    }
+  }
+
+  function jumpToFirstSearchHit() {
+    var resultContainer = document.getElementById('local-search-results');
+    if (!resultContainer) return;
+
+    var firstLink = resultContainer.querySelector('.search-result-title');
+    if (!firstLink) return;
+
+    var href = firstLink.getAttribute('href');
+    if (!href) return;
+
+    forceCloseSearchPopup();
+
+    if (window.pjax && typeof window.pjax.loadUrl === 'function') {
+      window.pjax.loadUrl(href);
+      return;
+    }
+
+    window.location.href = href;
+  }
+
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function loadFallbackEntries() {
+    if (fallbackDataPromise) return fallbackDataPromise;
+
+    var searchPath =
+      (window.GLOBAL_CONFIG && window.GLOBAL_CONFIG.localSearch && window.GLOBAL_CONFIG.localSearch.path) ||
+      '/search.xml';
+
+    fallbackDataPromise = fetch(searchPath, { cache: 'no-store' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('search index fetch failed');
+        return response.text();
+      })
+      .then(function (xmlText) {
+        var xml = new window.DOMParser().parseFromString(xmlText, 'text/xml');
+        return Array.prototype.map.call(xml.querySelectorAll('entry'), function (entry) {
+          var titleNode = entry.querySelector('title');
+          var urlNode = entry.querySelector('url');
+          var contentNode = entry.querySelector('content');
+          var tags = Array.prototype.map.call(entry.querySelectorAll('tags > tag'), function (tagNode) {
+            return (tagNode.textContent || '').trim();
+          });
+
+          return {
+            title: (titleNode && titleNode.textContent) || '',
+            url: (urlNode && urlNode.textContent) || '',
+            content: ((contentNode && contentNode.textContent) || '').replace(/<[^>]+>/g, ' '),
+            tags: tags
+          };
+        });
+      })
+      .catch(function () {
+        return [];
+      });
+
+    return fallbackDataPromise;
+  }
+
+  function renderFallbackResults(container, keyword, hits) {
+    if (!container) return;
+
+    if (!hits.length) {
+      container.innerHTML =
+        '<div id="local-search__hits-empty">找不到您查询的内容：' + escapeHtml(keyword) + '</div>';
+      return;
+    }
+
+    var html = '<div class="search-result-list">';
+    hits.forEach(function (item) {
+      var url = item.url && item.url.charAt(0) === '/' ? item.url : '/' + String(item.url || '').replace(/^\/+/, '');
+      var title = escapeHtml(item.title || '无标题');
+      var snippet = escapeHtml(item.snippet || '');
+
+      html += '<div class="local-search__hit-item">';
+      html += '<div class="search-left" style="width:0"></div>';
+      html += '<div class="search-right" style="width:100%">';
+      html += '<a href="' + url + '" class="search-result-title">' + title + '</a>';
+      if (snippet) {
+        html += '<p class="search-result">' + snippet + '</p>';
+      }
+      if (item.tags && item.tags.length) {
+        html += '<div class="search-result-tags">';
+        item.tags.forEach(function (tag) {
+          var safeTag = escapeHtml(tag);
+          html += '<a class="tag-list" href="/tags/' + encodeURIComponent(tag) + '/" data-pjax-state>#' + safeTag + '</a>';
+        });
+        html += '</div>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+
+    container.innerHTML = html;
+  }
+
+  function bindSearchFallback() {
+    var input = document.querySelector('#local-search-input input');
+    var resultContainer = document.getElementById('local-search-results');
+    if (!input || !resultContainer) return;
+    if (input.dataset.kbFallbackBound === '1') return;
+
+    input.dataset.kbFallbackBound = '1';
+    var timer = null;
+
+    input.addEventListener('input', function () {
+      if (timer) window.clearTimeout(timer);
+
+      timer = window.setTimeout(function () {
+        var keyword = (input.value || '').trim().toLowerCase();
+        if (!keyword) return;
+
+        // Theme local-search renders first; fallback only steps in when no hit item is rendered.
+        if (resultContainer.querySelector('.local-search__hit-item')) {
+          return;
+        }
+
+        loadFallbackEntries().then(function (entries) {
+          var hits = [];
+
+          entries.forEach(function (entry) {
+            var title = (entry.title || '').toLowerCase();
+            var content = (entry.content || '').toLowerCase();
+            var tags = (entry.tags || []).join(' ').toLowerCase();
+
+            if (title.indexOf(keyword) === -1 && content.indexOf(keyword) === -1 && tags.indexOf(keyword) === -1) {
+              return;
+            }
+
+            var snippetSource = entry.content || '';
+            var idx = snippetSource.toLowerCase().indexOf(keyword);
+            var start = idx > 20 ? idx - 20 : 0;
+            var end = idx > -1 ? idx + 80 : 80;
+            var snippet = snippetSource.slice(start, end).trim();
+            if (start > 0) snippet = '...' + snippet;
+            if (end < snippetSource.length) snippet += '...';
+
+            hits.push({
+              title: entry.title,
+              url: entry.url,
+              tags: entry.tags,
+              snippet: snippet
+            });
+          });
+
+          renderFallbackResults(resultContainer, keyword, hits.slice(0, 30));
+        });
+      }, 220);
+    });
+
+    input.addEventListener('keydown', function (event) {
+      if (event.key !== 'Enter') return;
+
+      event.preventDefault();
+
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      window.setTimeout(function () {
+        jumpToFirstSearchHit();
+      }, 120);
+    });
+
+    if (!document.body.dataset.kbSearchPopupBound) {
+      document.body.dataset.kbSearchPopupBound = '1';
+
+      document.addEventListener(
+        'click',
+        function (event) {
+          var closeBtn = event.target && event.target.closest && event.target.closest('#local-search .search-close-button');
+          var mask = document.getElementById('search-mask');
+
+          if (closeBtn || (mask && event.target === mask)) {
+            event.preventDefault();
+            forceCloseSearchPopup();
+          }
+        },
+        true
+      );
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          forceCloseSearchPopup();
+        }
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', bindSearchFallback);
+  document.addEventListener('pjax:complete', bindSearchFallback);
+  if (document.readyState !== 'loading') bindSearchFallback();
 })();

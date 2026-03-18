@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>QT-C++基础（一）</title>
+    <url>/2026/03/11/QT-C++%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[class MyClass {public:    int value;};
+int main() {    MyClass obj;    MyClass *ptr &#x3D; &obj;    ptr-&gt;value &#x3D; 10;    cout &lt;&lt; ptr-&gt;value;  &#x2F;&#x2F; 输出10}
+]]></content>
+      <categories>
+        <category>软件</category>
+      </categories>
+      <tags>
+        <tag>QT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>vs调用matlab生成的dll文件</title>
     <url>/2026/03/11/vs%E8%B0%83%E7%94%A8matlab%E7%94%9F%E6%88%90%E7%9A%84dll%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[1.创建一个 MATLAB 函数创建一个简单的 MATLAB 函数并将其保存为 addTwoNumbers.m：
