@@ -1,5 +1,5 @@
-/* Worker API base URL */
-var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
+/* Worker API base URL fallback list (same-origin first) */
+var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
 
 /* 动态格言轮播 - Banner subtitle */
 (function () {
@@ -47,6 +47,62 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
 })();
 
 (function () {
+  function normalizeBase(base) {
+    return String(base || '').replace(/\/$/, '');
+  }
+
+  function getApiBases() {
+    var bases = [];
+
+    if (window && window.location && window.location.origin) {
+      bases.push(normalizeBase(window.location.origin));
+    }
+
+    if (window && Array.isArray(window.SHOP_API_BASES)) {
+      window.SHOP_API_BASES.forEach(function (base) {
+        if (typeof base === 'string' && base.trim()) {
+          bases.push(normalizeBase(base));
+        }
+      });
+    }
+
+    bases.push(normalizeBase(WORKER_BASE_FALLBACK));
+
+    var uniq = [];
+    bases.forEach(function (base) {
+      if (!base) return;
+      if (uniq.indexOf(base) === -1) uniq.push(base);
+    });
+
+    return uniq;
+  }
+
+  async function fetchFromApi(path, options) {
+    var bases = getApiBases();
+    var errors = [];
+
+    for (var i = 0; i < bases.length; i += 1) {
+      var base = bases[i];
+      var url = base + path;
+
+      try {
+        var response = await fetch(url, options || {});
+
+        // For product list, a 404 usually means current origin is static-only; try next base.
+        if (!response.ok && response.status === 404 && i < bases.length - 1) {
+          errors.push(base + ' => HTTP 404');
+          continue;
+        }
+
+        return { response: response, base: base };
+      } catch (error) {
+        errors.push(base + ' => ' + (error && error.message ? error.message : 'network error'));
+      }
+    }
+
+    throw new Error('接口请求失败：' + errors.join(' | '));
+  }
+
   async function readJsonResponse(response) {
     var text = await response.text();
     if (!text) {
@@ -188,12 +244,13 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
     if (!container) return;
 
     try {
-      var response = await fetch(WORKER_BASE + '/api/products', {
+      var fetched = await fetchFromApi('/api/products', {
         method: 'GET',
         headers: {
           'cache-control': 'no-store'
         }
       });
+      var response = fetched.response;
       var data = await readJsonResponse(response);
 
       if (!response.ok) {
@@ -319,13 +376,14 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
         button.textContent = '跳转支付中...';
 
         try {
-          var response = await fetch(WORKER_BASE + '/api/create-checkout-session', {
+          var fetched = await fetchFromApi('/api/create-checkout-session', {
             method: 'POST',
             headers: {
               'content-type': 'application/json'
             },
             body: JSON.stringify({ productId: productId })
           });
+          var response = fetched.response;
 
           var data = await readJsonResponse(response);
           if (!response.ok || !data.url) {
@@ -372,12 +430,13 @@ var WORKER_BASE = 'https://1217265165.m1217265165.workers.dev';
     statusEl.textContent = '正在核验支付状态，请稍候…';
 
     try {
-      var response = await fetch(WORKER_BASE + '/api/delivery?session_id=' + encodeURIComponent(sessionId), {
+      var fetched = await fetchFromApi('/api/delivery?session_id=' + encodeURIComponent(sessionId), {
         method: 'GET',
         headers: {
           'cache-control': 'no-store'
         }
       });
+      var response = fetched.response;
       var data = await readJsonResponse(response);
 
       if (!response.ok) {

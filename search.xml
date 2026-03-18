@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>vs调用matlab生成的dll文件</title>
+    <url>/2026/03/11/vs%E8%B0%83%E7%94%A8matlab%E7%94%9F%E6%88%90%E7%9A%84dll%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[1.创建一个 MATLAB 函数创建一个简单的 MATLAB 函数并将其保存为 addTwoNumbers.m：
+function result = addTwoNumbers(a, b)    result = a + b;end
+
+2.编译 MATLAB 函数​	命令行输入deploytool将函数封装成库
+​	配置环境变量，高级系统设置-&gt;环境变量-&gt;系统变量，将D:\MATLAB\R2024b\bin\win64完成后重启
+4.VS配置环境1）工程设置①VC++目录
+​	包含目录 ，按照matlab安装目录修改，D:\MATLAB\R2024b\extern\include;
+​	包含库目录 ，按照matlab安装目录修改，D:\MATLAB\R2024b\extern\lib\win64\microsoft
+②连接器
+​	连接器-&gt;常规-&gt;附加库目录，上一步的库目录，D:\MATLAB\R2024b\extern\lib\win64\microsoft
+​	连接器-&gt;输入-&gt;添加依赖项
+libmex.liblibmx.liblibmat.libmclmcrrt.lib自己生成的模型.lib
+
+2）复制文件到相应的文件夹下​	将生成的.dll文件放入D:\MATLAB\R2024b\bin\win64;​	将生成的.h文件放入D:\MATLAB\R2024b\extern\include；​	将生成的.lib文件放入D:\MATLAB\R2024b\extern\lib\win64\microsoft;
+3）拖动文件到工程目录中
+4.在 C++ 中使用生成的共享库#include &lt;iostream&gt;
+#include &quot;addTwoNumbersLib.h&quot;
+#include &quot;mclmcrrt.h&quot;
+#include &quot;mclcppclass.h&quot;
+
+int main() {
+    // 初始化 MATLAB 运行时
+    if (!mclInitializeApplication(NULL, 0)) {
+        std::cerr &lt;&lt; &quot;无法初始化应用程序。&quot; &lt;&lt; std::endl;
+        return -1;
+    }
+
+    if (!addTwoNumbersLibInitialize()) {
+        std::cerr &lt;&lt; &quot;无法初始化库。&quot; &lt;&lt; std::endl;
+        return -1;
+    }
+    
+    try {
+        // 创建 mwArray 对象作为输入
+        mwArray a(5.0);
+        mwArray b(10.0);
+    
+        // 调用 MATLAB 函数
+        mwArray result;
+        addTwoNumbers(1, result, a, b);
+    
+        // 显示结果
+        std::cout &lt;&lt; &quot;结果: &quot; &lt;&lt; result &lt;&lt; std::endl;
+    } catch (const mwException&amp; e) {
+        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;
+        return -1;
+    }
+    
+    // 终止 MATLAB 运行时
+    addTwoNumbersLibTerminate();
+    
+    mclTerminateApplication();
+    return 0;
+
+}
+
+
+]]></content>
+      <categories>
+        <category>软件</category>
+      </categories>
+      <tags>
+        <tag>MATLAB</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>QT-C++基础（一）</title>
     <url>/2026/03/11/QT-C++%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[ QT 是一个跨平台的 C++ 图形用户界面应用程序开发框架，广泛用于开发 GUI 程序以及非 GUI 程序，比如控制台工具和服务器。
@@ -219,41 +287,6 @@ class MyClass &#123;public:    int value;&#125;; int main() &#123;    MyClass ob
       </categories>
       <tags>
         <tag>QT</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vs调用matlab生成的dll文件</title>
-    <url>/2026/03/11/vs%E8%B0%83%E7%94%A8matlab%E7%94%9F%E6%88%90%E7%9A%84dll%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[1.创建一个 MATLAB 函数创建一个简单的 MATLAB 函数并将其保存为 addTwoNumbers.m：
-function result = addTwoNumbers(a, b)    result = a + b;end
-
-2.编译 MATLAB 函数​	命令行输入deploytool将函数封装成库
-​	配置环境变量，高级系统设置-&gt;环境变量-&gt;系统变量，将D:\MATLAB\R2024b\bin\win64完成后重启
-4.VS配置环境1）工程设置①VC++目录
-​	包含目录 ，按照matlab安装目录修改，D:\MATLAB\R2024b\extern\include;
-​	包含库目录 ，按照matlab安装目录修改，D:\MATLAB\R2024b\extern\lib\win64\microsoft
-②连接器
-​	连接器-&gt;常规-&gt;附加库目录，上一步的库目录，D:\MATLAB\R2024b\extern\lib\win64\microsoft
-​	连接器-&gt;输入-&gt;添加依赖项
-libmex.liblibmx.liblibmat.libmclmcrrt.lib自己生成的模型.lib
-
-2）复制文件到相应的文件夹下​	将生成的.dll文件放入D:\MATLAB\R2024b\bin\win64;​	将生成的.h文件放入D:\MATLAB\R2024b\extern\include；​	将生成的.lib文件放入D:\MATLAB\R2024b\extern\lib\win64\microsoft;
-3）拖动文件到工程目录中
-4.在 C++ 中使用生成的共享库#include &lt;iostream&gt;#include &quot;addTwoNumbersLib.h&quot;#include &quot;mclmcrrt.h&quot;#include &quot;mclcppclass.h&quot;int main() &#123;    // 初始化 MATLAB 运行时    if (!mclInitializeApplication(NULL, 0)) &#123;        std::cerr &lt;&lt; &quot;无法初始化应用程序。&quot; &lt;&lt; std::endl;        return -1;    &#125;    if (!addTwoNumbersLibInitialize()) &#123;        std::cerr &lt;&lt; &quot;无法初始化库。&quot; &lt;&lt; std::endl;        return -1;    &#125;        try &#123;        // 创建 mwArray 对象作为输入        mwArray a(5.0);        mwArray b(10.0);            // 调用 MATLAB 函数        mwArray result;        addTwoNumbers(1, result, a, b);            // 显示结果        std::cout &lt;&lt; &quot;结果: &quot; &lt;&lt; result &lt;&lt; std::endl;    &#125; catch (const mwException&amp; e) &#123;        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;        return -1;    &#125;        // 终止 MATLAB 运行时    addTwoNumbersLibTerminate();        mclTerminateApplication();    return 0;&#125;
-
-注释如下：
-​	①mclInitializeApplication 初始化
-​	②addTwoNumbersLibInitialize 初始化包含编译后的 MATLAB 函数的共享库
-​	③创建 mwArray 对象
-​	④addTwoNumbers(1, result, a, b) 调用函数
-[^]: 第一个参数 1 指定输出参数的数量，result 是一个 mwArray 对象
-​	⑤清理和终止matlab程序，addTwoNumbersLibTerminate → mclTerminateApplication 
-]]></content>
-      <categories>
-        <category>软件</category>
-      </categories>
-      <tags>
-        <tag>MATLAB</tag>
       </tags>
   </entry>
 </search>
