@@ -51,10 +51,23 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
     return String(base || '').replace(/\/$/, '');
   }
 
+  function isJsonLikeResponse(response, text) {
+    var contentType = (response && response.headers && response.headers.get('content-type')) || '';
+    if (/application\/json|\+json/i.test(contentType)) {
+      return true;
+    }
+
+    var trimmed = String(text || '').trim();
+    return trimmed.charAt(0) === '{' || trimmed.charAt(0) === '[';
+  }
+
   function getApiBases() {
     var bases = [];
+    var host = (window && window.location && window.location.hostname) || '';
+    var isGithubPages = /github\.io$/i.test(host);
 
-    if (window && window.location && window.location.origin) {
+    // In github.io deployments, same-origin has no /api backend and always 404.
+    if (!isGithubPages && window && window.location && window.location.origin) {
       bases.push(normalizeBase(window.location.origin));
     }
 
@@ -66,6 +79,7 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
       });
     }
 
+    // Always keep worker as reliable backend endpoint.
     bases.push(normalizeBase(WORKER_BASE_FALLBACK));
 
     var uniq = [];
@@ -80,6 +94,7 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
   async function fetchFromApi(path, options) {
     var bases = getApiBases();
     var errors = [];
+    var lastResult = null;
 
     for (var i = 0; i < bases.length; i += 1) {
       var base = bases[i];
@@ -87,24 +102,41 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
 
       try {
         var response = await fetch(url, options || {});
+        var text = await response.text();
+        var result = { response: response, base: base, text: text };
+        lastResult = result;
 
-        // For product list, a 404 usually means current origin is static-only; try next base.
-        if (!response.ok && response.status === 404 && i < bases.length - 1) {
-          errors.push(base + ' => HTTP 404');
+        var isJson = isJsonLikeResponse(response, text);
+
+        // Retry next base for all non-OK responses when available.
+        if ((!response.ok || !isJson) && i < bases.length - 1) {
+          errors.push(
+            base +
+              ' => ' +
+              (response.ok ? '非 JSON 响应' : 'HTTP ' + response.status) +
+              (!isJson && text
+                ? ' | ' + String(text).replace(/\s+/g, ' ').slice(0, 120)
+                : '')
+          );
           continue;
         }
 
-        return { response: response, base: base };
+        return result;
       } catch (error) {
         errors.push(base + ' => ' + (error && error.message ? error.message : 'network error'));
       }
     }
 
+    // If we did get a response from the last base, return it for caller-specific handling.
+    if (lastResult) {
+      return lastResult;
+    }
+
     throw new Error('接口请求失败：' + errors.join(' | '));
   }
 
-  async function readJsonResponse(response) {
-    var text = await response.text();
+  async function readJsonResponse(response, preloadedText) {
+    var text = typeof preloadedText === 'string' ? preloadedText : await response.text();
     if (!text) {
       return {};
     }
@@ -295,7 +327,7 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
         }
       });
       var response = fetched.response;
-      var data = await readJsonResponse(response);
+      var data = await readJsonResponse(response, fetched.text);
 
       if (!response.ok) {
         throw new Error(data.error || ('加载商品失败（HTTP ' + response.status + '）'));
@@ -429,7 +461,7 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
           });
           var response = fetched.response;
 
-          var data = await readJsonResponse(response);
+          var data = await readJsonResponse(response, fetched.text);
           if (!response.ok || !data.url) {
             throw new Error(data.error || ('创建支付会话失败（HTTP ' + response.status + '）'));
           }
@@ -481,7 +513,7 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
         }
       });
       var response = fetched.response;
-      var data = await readJsonResponse(response);
+      var data = await readJsonResponse(response, fetched.text);
 
       if (!response.ok) {
         throw new Error(data.error || ('自动发货失败（HTTP ' + response.status + '）'));
