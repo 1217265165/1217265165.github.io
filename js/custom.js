@@ -154,6 +154,50 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
     return '';
   }
 
+  function getLocalFallbackProducts() {
+    return [
+      {
+        id: 'hbrb',
+        name: 'HBRB 故障诊断算法包',
+        description: '接口暂不可达，当前仅展示商品信息。',
+        amount: 9900,
+        badgeText: '暂不可下单',
+        badgeHot: true,
+        coverText: 'HBRB',
+        coverClass: 'cover-hbrb',
+        buttonText: '接口恢复后可购买',
+        soldOut: true,
+        inventoryLabel: '接口不可达'
+      },
+      {
+        id: 'spec',
+        name: '频谱分析自动化工具',
+        description: '接口暂不可达，当前仅展示商品信息。',
+        amount: 100,
+        badgeText: '暂不可下单',
+        badgeHot: false,
+        coverText: 'SPEC',
+        coverClass: 'cover-spec',
+        buttonText: '接口恢复后可购买',
+        soldOut: true,
+        inventoryLabel: '接口不可达'
+      },
+      {
+        id: 'gemini',
+        name: 'Gemini账号:账号—密码—邮箱—2FA',
+        description: '接口暂不可达，当前仅展示商品信息。',
+        amount: 5000,
+        badgeText: '暂不可下单',
+        badgeHot: false,
+        coverText: 'Gemini Pro',
+        coverClass: 'cover-api',
+        buttonText: '接口恢复后可购买',
+        soldOut: true,
+        inventoryLabel: '接口不可达'
+      }
+    ];
+  }
+
   function renderShopProducts(container, products, currency) {
     container.innerHTML = '';
 
@@ -259,19 +303,19 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
 
       renderShopProducts(container, data.products || [], data.currency || 'cny');
     } catch (error) {
-      container.innerHTML = '';
-      var errorCard = document.createElement('article');
-      errorCard.className = 'shop-v3-card';
-      var errorBody = document.createElement('div');
-      errorBody.className = 'shop-v3-body';
-      var errorTitle = document.createElement('h3');
-      errorTitle.textContent = '商品加载失败';
-      var errorDesc = document.createElement('p');
-      errorDesc.textContent = error instanceof Error ? error.message : '请稍后刷新重试。';
-      errorBody.appendChild(errorTitle);
-      errorBody.appendChild(errorDesc);
-      errorCard.appendChild(errorBody);
-      container.appendChild(errorCard);
+      renderShopProducts(container, getLocalFallbackProducts(), 'cny');
+
+      var oldWarn = document.querySelector('.shop-api-warning');
+      if (oldWarn && oldWarn.parentNode) {
+        oldWarn.parentNode.removeChild(oldWarn);
+      }
+
+      var warn = document.createElement('p');
+      warn.className = 'shop-api-warning';
+      warn.textContent =
+        '支付接口临时不可用，已切换为展示模式。' +
+        (error instanceof Error ? ' ' + error.message : '');
+      container.parentNode && container.parentNode.appendChild(warn);
     }
   }
 

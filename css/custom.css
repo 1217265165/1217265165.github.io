@@ -837,6 +837,12 @@ a.product-item:hover {
   line-height: 1.65;
 }
 
+.shop-api-warning {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, #c87900 70%, var(--anzhiyu-secondfont) 30%);
+}
+
 /* =========================================================
    自动发货结果页
    ========================================================= */
