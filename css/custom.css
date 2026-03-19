@@ -1757,21 +1757,6 @@ a.product-item:hover {
 /* =========================================================
    Home Research Dashboard (Top Right)
    ========================================================= */
-#home_top #bannerGroup {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 12px;
-  align-items: stretch;
-}
-
-#home_top #random-banner,
-#home_top .research-dashboard {
-  min-width: 0;
-}
-
-#home_top .topGroup {
-  margin-top: 12px;
-}
 
 .research-dashboard {
   width: 100%;
@@ -1858,10 +1843,6 @@ a.product-item:hover {
 }
 
 @media (max-width: 1100px) {
-  #home_top #bannerGroup {
-    grid-template-columns: 1fr;
-  }
-
   .research-dashboard {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2087,10 +2068,6 @@ body.vmq-modal-open {
     width: 100%;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     min-height: auto;
-  }
-
-  #bannerGroup {
-    align-items: stretch;
   }
 }
 
