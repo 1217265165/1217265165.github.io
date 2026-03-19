@@ -1757,12 +1757,28 @@ a.product-item:hover {
 /* =========================================================
    Home Research Dashboard (Top Right)
    ========================================================= */
+#home_top #bannerGroup {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+#home_top #random-banner,
+#home_top .research-dashboard {
+  min-width: 0;
+}
+
+#home_top .topGroup {
+  margin-top: 12px;
+}
+
 .research-dashboard {
-  width: 46%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  min-height: 180px;
+  min-height: 168px;
 }
 
 .research-dashboard-card {
@@ -1805,11 +1821,12 @@ a.product-item:hover {
   margin: 10px 0 0;
   color: color-mix(in srgb, #49b1f5 72%, var(--anzhiyu-fontcolor) 28%);
   font-size: 0.9rem;
-  min-height: 62px;
+  min-height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-lab-line {
@@ -1838,6 +1855,37 @@ a.product-item:hover {
 [data-lab-status].is-offline .lab-dot {
   background: #ef4444;
   animation: none;
+}
+
+@media (max-width: 1100px) {
+  #home_top #bannerGroup {
+    grid-template-columns: 1fr;
+  }
+
+  .research-dashboard {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .research-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .research-dashboard-card {
+    min-height: auto;
+  }
+}
+
+.about-pro-formula-inline.plain,
+.about-pro-formula-block.plain {
+  font-family: "JetBrains Mono", "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  color: #2f9fe8 !important;
+}
+
+.about-pro-formula-block.plain {
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 @keyframes lab-dot-pulse {
