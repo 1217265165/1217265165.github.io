@@ -47,6 +47,29 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
 })();
 
 (function () {
+  function getPaymentMode() {
+    if (window.PaymentEngine && typeof window.PaymentEngine.getMode === 'function') {
+      return window.PaymentEngine.getMode();
+    }
+
+    return 'STRIPE';
+  }
+
+  function getCheckoutButtonText() {
+    return getPaymentMode() === 'VMQ' ? 'Get Access (Lab)' : 'Get Access (Stripe)';
+  }
+
+  function getProductVisual(productId) {
+    if (productId === 'hbrb') {
+      return { icon: '📊', spec: 'HBRB | Rule Fusion | Precision Tuning' };
+    }
+    if (productId === 'spec') {
+      return { icon: '🛰️', spec: 'SCPI | Spectrum Pipeline | Auto Capture' };
+    }
+
+    return { icon: '🧠', spec: 'GenAI API | Credential Delivery | One-time Code' };
+  }
+
   function normalizeBase(base) {
     return String(base || '').replace(/\/$/, '');
   }
@@ -252,10 +275,20 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
     products.forEach(function (product) {
       var card = document.createElement('article');
       card.className = 'shop-v3-card';
+      var visual = getProductVisual(product.id);
 
       var cover = document.createElement('div');
       cover.className = 'shop-v3-cover ' + (product.coverClass || getDefaultCoverClass(product.id));
-      cover.textContent = product.coverText || getDefaultCoverText(product.id);
+
+      var icon = document.createElement('span');
+      icon.className = 'shop-v3-icon';
+      icon.textContent = visual.icon;
+      cover.appendChild(icon);
+
+      var coverText = document.createElement('span');
+      coverText.className = 'shop-v3-cover-text';
+      coverText.textContent = product.coverText || getDefaultCoverText(product.id);
+      cover.appendChild(coverText);
 
       var body = document.createElement('div');
       body.className = 'shop-v3-body';
@@ -269,6 +302,10 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
 
       var desc = document.createElement('p');
       desc.textContent = product.description || '';
+
+      var spec = document.createElement('p');
+      spec.className = 'shop-v3-spec';
+      spec.textContent = visual.spec;
 
       var foot = document.createElement('div');
       foot.className = 'shop-v3-foot';
@@ -295,7 +332,12 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
       button.className = 'shop-checkout-btn';
       button.type = 'button';
       button.setAttribute('data-product-id', product.id);
-      button.textContent = product.soldOut ? '库存不足' : (product.buttonText || 'Stripe 自动发货');
+      button.setAttribute('data-product-name', product.name || 'Cloud Lab Access');
+      button.setAttribute('data-product-amount', String(Number(product.amount || 0)));
+      button.setAttribute('data-payment-provider', getPaymentMode());
+      button.setAttribute('data-provider', getPaymentMode());
+      button.setAttribute('data-offline-text', 'Lab Offline');
+      button.textContent = product.soldOut ? '库存不足' : getCheckoutButtonText();
       if (product.soldOut) {
         button.disabled = true;
       }
@@ -307,6 +349,7 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
       body.appendChild(badge);
       body.appendChild(title);
       body.appendChild(desc);
+      body.appendChild(spec);
       body.appendChild(foot);
 
       card.appendChild(cover);
@@ -449,9 +492,20 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
 
         var originalText = button.textContent;
         button.disabled = true;
-        button.textContent = '跳转支付中...';
+        button.textContent = getPaymentMode() === 'VMQ' ? '创建实验订单...' : '跳转支付中...';
 
         try {
+          if (window.PaymentEngine && typeof window.PaymentEngine.start === 'function') {
+            await window.PaymentEngine.start({
+              id: productId,
+              name: button.getAttribute('data-product-name') || 'Cloud Lab Access',
+              amount: Number(button.getAttribute('data-product-amount') || 0)
+            });
+            button.disabled = false;
+            button.textContent = originalText;
+            return;
+          }
+
           var fetched = await fetchFromApi('/api/create-checkout-session', {
             method: 'POST',
             headers: {
@@ -531,6 +585,10 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
   }
 
   async function initShopAutomation() {
+    if (window.PaymentEngine && typeof window.PaymentEngine.init === 'function') {
+      window.PaymentEngine.init();
+    }
+
     await loadProducts();
     bindCheckoutButtons();
     loadDelivery();
@@ -539,6 +597,89 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
   document.addEventListener('DOMContentLoaded', initShopAutomation);
   document.addEventListener('pjax:complete', initShopAutomation);
   if (document.readyState !== 'loading') initShopAutomation();
+})();
+
+/* Home top-right dashboard: rotating insight + Lab status hook */
+(function () {
+  var intervalId = null;
+  var insightList = [
+    '$\\beta_{nk} = \\frac{\\mu_{nk}}{\\sum_j \\mu_{nj}}$',
+    '$\\Delta f = f_{measured} - f_{reference}$',
+    '$R_{module} = \\arg\\max_k\\; P(F_k\\mid x)$'
+  ];
+  var index = 0;
+
+  function setLabStatus(online, text) {
+    var cards = document.querySelectorAll('[data-lab-status]');
+    cards.forEach(function (card) {
+      card.classList.remove('is-online', 'is-offline');
+      card.classList.add(online ? 'is-online' : 'is-offline');
+    });
+
+    var texts = document.querySelectorAll('[data-lab-status-text]');
+    texts.forEach(function (node) {
+      node.textContent = text || (online ? 'Tunnel Online' : 'Lab Offline');
+    });
+  }
+
+  function fallbackLabHealthCheck() {
+    var config = window.PAYMENT_CONFIG || {};
+    var vmq = config.vmq || {};
+    var base = String(vmq.baseUrl || '').replace(/\/$/, '');
+    if (!base || /your-cpolar-subdomain/.test(base)) {
+      setLabStatus(false, 'Lab Offline · 未配置 cpolar');
+      return;
+    }
+
+    var healthPath = vmq.healthPath || '/health';
+    fetch(base + healthPath + '?t=' + Date.now(), {
+      method: 'GET',
+      headers: {
+        'cache-control': 'no-store'
+      }
+    })
+      .then(function (response) {
+        setLabStatus(!!(response && response.ok), response && response.ok ? 'Tunnel Online' : 'Lab Offline');
+      })
+      .catch(function () {
+        setLabStatus(false, 'Lab Offline');
+      });
+  }
+
+  function renderInsight() {
+    var target = document.querySelector('[data-lab-insight]');
+    if (!target) return;
+
+    target.innerHTML = insightList[index];
+    index = (index + 1) % insightList.length;
+
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+      window.MathJax.typesetPromise([target]).catch(function () {});
+    }
+  }
+
+  function initDashboard() {
+    var dashboard = document.querySelector('.research-dashboard');
+    if (!dashboard) return;
+
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
+    renderInsight();
+    intervalId = setInterval(renderInsight, 5500);
+
+    if (window.PaymentEngine && typeof window.PaymentEngine.healthCheckVmq === 'function') {
+      window.PaymentEngine.healthCheckVmq();
+      return;
+    }
+
+    fallbackLabHealthCheck();
+  }
+
+  document.addEventListener('DOMContentLoaded', initDashboard);
+  document.addEventListener('pjax:complete', initDashboard);
+  if (document.readyState !== 'loading') initDashboard();
 })();
 
 /* Local Search fallback: ensure popup search works even when theme parser misses matches */

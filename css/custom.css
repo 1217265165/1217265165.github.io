@@ -1755,6 +1755,308 @@ a.product-item:hover {
 }
 
 /* =========================================================
+   Home Research Dashboard (Top Right)
+   ========================================================= */
+.research-dashboard {
+  width: 46%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  min-height: 180px;
+}
+
+.research-dashboard-card {
+  border: 1px solid color-mix(in srgb, #49b1f5 22%, var(--style-border-always) 78%);
+  background: color-mix(in srgb, var(--anzhiyu-card-bg) 86%, transparent 14%);
+  border-radius: 14px;
+  padding: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 18px rgba(20, 36, 90, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dashboard-card-title {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #49b1f5;
+  font-weight: 700;
+}
+
+.research-dashboard-card h3 {
+  margin: 8px 0 5px;
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--anzhiyu-fontcolor);
+}
+
+.dashboard-card-text {
+  margin: 0;
+  color: var(--anzhiyu-secondfont);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.dashboard-card-formula {
+  margin: 10px 0 0;
+  color: color-mix(in srgb, #49b1f5 72%, var(--anzhiyu-fontcolor) 28%);
+  font-size: 0.9rem;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.dashboard-lab-line {
+  margin: 10px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--anzhiyu-fontcolor);
+}
+
+.lab-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ef4444;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+}
+
+[data-lab-status].is-online .lab-dot {
+  background: #10b981;
+  animation: lab-dot-pulse 1.8s ease-in-out infinite;
+}
+
+[data-lab-status].is-offline .lab-dot {
+  background: #ef4444;
+  animation: none;
+}
+
+@keyframes lab-dot-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* =========================================================
+   Shop V4 polish
+   ========================================================= */
+.shop-v3-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.shop-v3-cover {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shop-v3-icon {
+  font-size: 2.15rem;
+  line-height: 1;
+}
+
+.shop-v3-cover-text {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  opacity: 0.82;
+}
+
+.shop-v3-spec {
+  margin-top: 6px !important;
+  font-size: 0.74rem !important;
+  line-height: 1.45 !important;
+  color: color-mix(in srgb, #49b1f5 68%, var(--anzhiyu-secondfont) 32%) !important;
+  border-left: 2px solid color-mix(in srgb, #49b1f5 42%, transparent 58%);
+  padding-left: 8px;
+}
+
+.shop-v3-support {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--style-border-always);
+  background: color-mix(in srgb, var(--anzhiyu-card-bg) 85%, #f8fbff 15%);
+}
+
+.shop-v3-support h4 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.shop-v3-support p {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--anzhiyu-secondfont);
+}
+
+.shop-v3-support-icons {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shop-v3-support-icons span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--style-border-always);
+  background: var(--anzhiyu-secondbg);
+}
+
+/* =========================================================
+   VMQ Modal
+   ========================================================= */
+.vmq-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(9, 14, 30, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 14px;
+}
+
+.vmq-modal.is-open {
+  display: flex;
+}
+
+.vmq-modal-panel {
+  width: min(96vw, 420px);
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, #49b1f5 30%, var(--style-border-always) 70%);
+  background: color-mix(in srgb, var(--anzhiyu-card-bg) 90%, #fff 10%);
+  padding: 16px;
+  box-shadow: 0 18px 38px rgba(12, 21, 45, 0.28);
+  position: relative;
+}
+
+.vmq-modal-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--style-border-always);
+  background: var(--anzhiyu-secondbg);
+  color: var(--anzhiyu-fontcolor);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.vmq-modal-kicker {
+  margin: 0;
+  color: #49b1f5;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.vmq-modal-panel h3 {
+  margin: 8px 0 8px;
+}
+
+.vmq-modal-amount {
+  font-size: 0.95rem;
+  color: var(--anzhiyu-secondfont);
+}
+
+.vmq-modal-amount strong {
+  color: #ef4444;
+  font-size: 1.25rem;
+  margin-left: 6px;
+}
+
+.vmq-modal-order {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--anzhiyu-secondfont);
+}
+
+.vmq-modal-order code {
+  color: #49b1f5;
+  font-weight: 700;
+}
+
+.vmq-modal-qr-wrap {
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.vmq-modal-qr-wrap img {
+  width: 210px;
+  max-width: 70vw;
+  border-radius: 12px;
+  border: 1px solid var(--style-border-always);
+  background: #fff;
+  padding: 6px;
+}
+
+.vmq-modal-status,
+.vmq-modal-footnote {
+  margin: 0;
+  line-height: 1.65;
+  font-size: 0.8rem;
+  color: var(--anzhiyu-secondfont);
+}
+
+.vmq-modal-footnote {
+  margin-top: 6px;
+  opacity: 0.85;
+}
+
+body.vmq-modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .research-dashboard {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-height: auto;
+  }
+
+  #bannerGroup {
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 960px) {
+  .shop-v3-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .research-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
    Knowledge Base
    ========================================================= */
 .kb-page {
