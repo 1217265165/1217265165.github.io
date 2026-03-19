@@ -169,6 +169,11 @@
   animation: shop-pulse 3s ease-in-out infinite;
 }
 
+/* 首页顶部恢复经典样式：大横幅 + 三枚入口按钮 */
+#home_top #bannerGroup {
+  width: 100% !important;
+}
+
 @keyframes shop-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(66, 90, 239, 0); }
   50%       { box-shadow: 0 0 0 5px rgba(66, 90, 239, 0.18); }
