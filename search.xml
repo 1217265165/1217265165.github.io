@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>QT-C++基础（一）</title>
+    <url>/2026/03/11/QT-C++%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[ QT 是一个跨平台的 C++ 图形用户界面应用程序开发框架，广泛用于开发 GUI 程序以及非 GUI 程序，比如控制台工具和服务器。
+一、输入输出​    在学习C++的输入输出前，我们需要先了解命名空间的概念。其中std 是 C++ 标准库的命名空间。它是一个定义在 C++ 标准库中的所有类、函数和变量的命名空间
+1、命名空间
+ 1）命名空间功能
+
+C++ 中的命名空间（Namespace）是一种封装标识符（如变量名、函数名等）的方式，用于解决标识符的命名冲突问题，特别是在大型项目中，或者当多个库或模块被同时使用时。命名空间提供了一种将一组相关的标识符组织在一起的方法，从而使得代码更加清晰、易于维护。
+
+2）命名空间的使用方式
+
+在 C++ 中，如果你想使用标准库中的任何类、函数或对象，你通常有两种选择：     ①使用 std:: 前缀：这是最常见的方式，它明确指定了你正在使用的是位于 std 命名空间中的元素。适用于大型项目。     ②使用 using namespace std; ：这允许你在不显式指定 std:: 的情况下使用 std 命名空间中的所有元素 。适用于中小型项目。
+
+2、标准输入输出流
+1）下边以输入输出为例 
+​    QT 可以使用 C 语言，但主要和更常见的做法是使用 C++，它提供了与 C 语言的互操作性。所以我们来用C预言的输入输出来对照一下C++，方便大家的理解。
+#include &lt;stdio.h&gt;int main()&#123;	int a;	scanf(&quot;%d&quot;,&amp;a);	printf(&quot;%d&quot;,a);&#125;
+
+
+①方式一 使用 std:: 前缀（c++中标准输出流为cout；标准输入流为cin;）
+#include &lt;iostream&gt;int main()&#123;	int a;	std::cin&gt;&gt;a;	std::cout&lt;&lt;a&lt;&lt;std::endl;	return 0;&#125;
+
+
+
+注：关于输入输出流中箭头的方向大家可以这么理解，输入端将内容送给了a，而输出时a的值又被送给了输出端。
+
+②方式二 使用 using namespace std；
+#include &lt;iostream&gt;using namespace std;int main()&#123;	int a;	cin&gt;&gt;a;	cout&lt;&lt;a&lt;&lt;endl;	return 0;&#125;
+
+
+
+举例：自定义命名空间
+
+#include &lt;iostream&gt;    namespace MyNamespace &#123;      void myFunction() &#123;          std::cout &lt;&lt; &quot;Hello from MyNamespace::myFunction!&quot; &lt;&lt; std::endl;      &#125;  &#125;    using namespace MyNamespace; // 使用 MyNamespace 命名空间中的所有成员    int main() &#123;      myFunction(); // 直接调用，无需 MyNamespace:: 前缀      return 0;  &#125;
+
+
+二、数据类型（变量使用应注意变量域）1.基本数据类型
+​    C++中的其中数据类型为下图所示 ，相较C多了一个宽字符型。宽字符型：主要用于表示和存储多字节字符，‌如汉字、‌韩文、‌日文等。‌在C语言中，‌标准的char类型通常只能存储一个字节的字符，‌而宽字符型（‌如C++中的wchar_t）‌则用于存储多字节字符，‌通常占据两个字节的空间。‌其存储空间
+编辑
+​    下面具体演示一下宽字符型数据的使用 
+#include &lt;iostream&gt;#include &lt;locale&gt;#include &lt;wchar.h&gt;int main() &#123;	// 设置本地化以支持宽字符	std::setlocale(LC_ALL, &quot;&quot;);	// 使用 wchar_t 类型定义一个宽字符串	wchar_t wstr[] = L&quot;你好，世界！&quot;;	// 在 C++ 中打印宽字符串	std::wcout &lt;&lt; wstr &lt;&lt; std::endl;	return 0;&#125;
+
+
+ 2.如何使用 
+#include &lt;iostream&gt;#include &lt;climits&gt; //要使用 &lt;climits&gt; 中定义的常量，需要包含这个头文件int main() &#123;	std::cout &lt;&lt; &quot;整型的最小值为 &quot; &lt;&lt; INT_MIN &lt;&lt; std::endl;	return 0;&#125;
+
+
+它提供的各种常量如下：
+
+INT_MAX ： int 类型的最大值。
+INT_MIN ： int 类型的最小值。
+UINT_MAX ： unsigned int 类型的最大值。
+LONG_MAX ： long int 类型的最大值。
+LONG_MIN ： long int 类型的最小值。
+LLONG_MAX ： long long int 类型的最大值。
+LLONG_MIN ： long long int 类型的最小值。
+
+ 3.typedef 声明（使用 typedef 为一个已有的类型取一个新的名字 eg:typedef int HAHA）
+三、字符串、数组、判断、循环（等同C语言，有基础的可以直接跳过）1.字符串
+
+​    在 C++ 中， string 类是标准库的一部分，用于表示和操作字符串。它是对传统的 C 风格字符串（以空字符 ‘\0’ 结尾的字符数组）的一个更安全、更方便的封装。 string 类是在  头文件中定义的，并且位于 std 命名空间中。
+
+编辑编辑
+以表格中第一个示例：返回字符串的长度 
+#include &lt;iostream&gt;#include &lt;string&gt;int main()&#123;	std::string str=&quot;hello&quot;;	std::cout&lt;&lt;str.length()&lt;&lt;std::endl;   	return 0;&#125;
+
+
+2.数组（容器vector可以自适应的变更大小，更为常用）
+
+int arr1[10];//一维数组int arr2[3][3];//二维数组3×3
+
+3.判断 (示例为判断所输入数的正负)
+#include &lt;iostream&gt;using namespace std;int main()&#123;	int num;	cin&gt;&gt;num;	if(num==0)&#123;		cout &lt;&lt; &quot;你输入的数为0&quot;&lt;&lt;endl;	&#125;	else if(num&gt;0)&#123;		cout &lt;&lt; &quot;你输入的数为正数&quot;&lt;&lt;endl;	&#125;	else&#123;	 cout &lt;&lt; &quot;你输入的数为负数&quot;&lt;&lt;enl;	&#125;   return 0;&#125;
+
+
+4.循环（示例为输出0-9）
+
+while循环
+
+#include &lt;iostream&gt;int main()&#123;	int i=0;   while(i&lt;10)&#123;	   std::cout&lt;&lt;i&lt;&lt;std::endl ;	   i++;   &#125;   return 0;&#125;
+
+
+2）for循环
+#include &lt;iostream&gt;int main()&#123;	for(int i=0;i&lt;10;i++)&#123;	   std::cout&lt;&lt;i&lt;&lt;std::endl ;   &#125;   return 0;&#125;
+
+
+四、函数、内联函数、以及Lambda 表达式1、函数（实现两个数相加为例,函数的定义在前引用在后，这里实现了num1+num2）
+#include &lt;iostream&gt;#include &lt;string&gt;using namespace std;int add(int a,int b)&#123;	return a + b;&#125;int main()&#123;	int num1=1,num2=2;	cout&lt;&lt;add(num1,num2)&lt;&lt;endl;&#125;
+
+
+2、内联函数
+
+​    内联函数（Inline Function）是C++中一种特殊的函数，其定义直接在每个调用点展开。这意味着编译器会尝试将函数调用替换为函数本身的代码，这样可以减少函数调用的开销，尤其是在小型函数中。当它被调用时，编译器可能会将函数调用替换为函数体内的代码。
+
+#include &lt;iostream&gt;#include &lt;string&gt;using namespace std;inline int add(int a,int b)&#123;	return a + b;&#125;int main()&#123;	int num1=1,num2=2;	cout&lt;&lt;add(num1,num2)&lt;&lt;endl;&#125;
+
+
+ 上述代码等同于
+#include &lt;iostream&gt;#include &lt;string&gt;using namespace std;int main()&#123;	int num1=1,num2=2;	cout&lt;&lt;num1+num2&lt;&lt;endl;&#125;
+
+
+注：内联函数适用于最适合内联的小型函数和在性能要求高的代码中频繁调用的函数，不能滥用。
+3、Lambda 表达式（匿名函数）
+​    Lambda 构成如下
+
+捕获列表 -&gt; 返回数据类型{     &#x2F;&#x2F; 函数体 }
+
+ 1）下面我们用lambda函数来实现一下a+b,以参数列表的形式
+#include &lt;iostream&gt;using namespace std;int main()&#123;	auto add = [](int a,int b)-&gt;int&#123;		return a+b;	&#125;;	int num1=1,num2=2;	cout&lt;&lt;add(num1,num2)&lt;&lt;endl;&#125;
+
+
+2）以捕获列表的形式
+#include &lt;iostream&gt;using namespace std;int main()&#123;		int num1=1,num2=2;	auto add = [num1,num2]&#123;		return num1+num2;	&#125;;	cout&lt;&lt;add()&lt;&lt;endl;&#125;
+
+
+
+捕获获取的是它们的值，并不能进行变更， [&#x3D;]可以捕获所有外部变量。当我们尝试在匿名函数中变更num1的值时，它会提示我们这个值是只读的，你可以理解为值的复制。 
+编辑
+
+那如何进行变更呢 ，我们可以使用 [&amp;] ，即按引用捕获所有外部变量，此时可以进行值的变更 
+#include &lt;iostream&gt;using namespace std;int main()&#123;		int num1=1,num2=2;		auto add = [&amp;]()&#123;		num1=3;		return num1+num2;	&#125;;		cout&lt;&lt;add()&lt;&lt;endl;&#125;
+
+
+此时输出的值为5。
+
+
+五、结构体​    C&#x2F;C++ 数组允许定义可存储相同类型数据项的变量，但是结构是 C++ 中另一种用户自定义的可用的数据类型，它允许您存储不同类型的数据项。
+1）举例
+#include &lt;iostream&gt;#include &lt;cstring&gt;using namespace std;void printStudent( struct Student s ); // 声明一个结构体类型：学生，包含姓名和年龄struct Student&#123;   char  name[10];   int   year;&#125;; int main( )&#123;   Student student;        // 定义结构体类型Student的变量student	    //student   strcpy( student.name, &quot;小帅&quot;);   student.year = 10;    // 输出student信息   printStudent( student );    return 0;&#125;void printStudent( struct Student s )&#123;   cout &lt;&lt; &quot;姓名 : &quot; &lt;&lt;s.name &lt;&lt;endl;   cout &lt;&lt; &quot;年龄 : &quot; &lt;&lt; s.year&lt;&lt;endl;&#125;
+
+
+2）拓展，将结构体的指针作为函数参数来传递结构体
+#include &lt;iostream&gt;#include &lt;cstring&gt;using namespace std;void printStudent( struct Student* s ); // 声明一个结构体类型：学生，包含姓名和年龄struct Student&#123;   char  name[10];   int   year;&#125;;int main( )&#123;	struct Student student;        // 定义结构体类型Student的变量student    //student	strcpy( student.name, &quot;小帅&quot;);	student.year = 10;	printStudent(&amp;student);	return 0;&#125;void printStudent( struct Student* s )&#123;	cout &lt;&lt; &quot;姓名 : &quot; &lt;&lt;s-&gt;name &lt;&lt;endl;	cout &lt;&lt; &quot;年龄 : &quot; &lt;&lt; s-&gt;year&lt;&lt;endl;&#125;
+
+
+3、结构体指针，使用malloc在堆申请结构体空间
+#include &lt;iostream&gt;#include &lt;cstring&gt;using namespace std;void printStudent( struct Student* s ); // 声明一个结构体类型：学生，包含姓名和年龄struct Student&#123;   char  name[10];   int   year;&#125;;int main( )&#123;	struct Student *student;        // 定义结构体类型Student的变量student	student = (struct Student*)malloc(sizeof(struct Student));//申请地址，否则会报错    //student	strcpy( student-&gt;name, &quot;小帅&quot;);	student-&gt;year = 10;	cout &lt;&lt; &quot;姓名 : &quot; &lt;&lt;student-&gt;name &lt;&lt;endl;	cout &lt;&lt; &quot;年龄 : &quot; &lt;&lt;student-&gt;year&lt;&lt;endl;	return 0;&#125;
+
+
+六、容器（vector，相较于数组更为常用）
+​    C++ 中的 vector 是一种序列容器，它允许你在运行时动态地插入和删除元素。vector 是基于数组的数据结构，但它可以自动管理内存，这意味着你不需要手动分配和释放内存。与 C++ 数组相比，vector 具有更多的灵活性和功能，使其成为 C++ 中常用的数据结构之一。
+
+要使用 vector，首先需要包含  头文件：
+1、案例
+#include &lt;iostream&gt;#include &lt;vector&gt;using namespace std;int main() &#123;    // 创建一个空的整数向量    std::vector&lt;int&gt; myVector;	    // 添加元素到向量中    myVector.push_back(3);    myVector.push_back(7);    myVector.push_back(11);    myVector.push_back(5);    // 访问向量中的元素并输出    std::cout &lt;&lt; &quot;Elements in the vector: &quot;;    for (int element : myVector) &#123;        std::cout &lt;&lt; element &lt;&lt; &quot; &quot;;    &#125;	std::cout &lt;&lt; std::endl;	std::cout &lt;&lt; &quot;Elements in the vector: &quot;;	for (auto it = myVector.begin(); it != myVector.end(); ++it) &#123;    std::cout &lt;&lt; *it &lt;&lt; &quot; &quot;;	&#125;    std::cout &lt;&lt; std::endl;	    // 访问向量中的第一个元素并输出    std::cout &lt;&lt; &quot;First element: &quot; &lt;&lt; myVector[0] &lt;&lt; std::endl;    // 访问向量中的第二个元素并输出    std::cout &lt;&lt; &quot;Second element: &quot; &lt;&lt; myVector.at(1) &lt;&lt; std::endl;    // 获取向量的大小并输出    std::cout &lt;&lt; &quot;Size of the vector: &quot; &lt;&lt; myVector.size() &lt;&lt; std::endl;    // 删除向量中的第三个元素    myVector.erase(myVector.begin() + 2);    // 输出删除元素后的向量    std::cout &lt;&lt; &quot;Elements in the vector after erasing: &quot;;    for (int element : myVector) &#123;        std::cout &lt;&lt; element &lt;&lt; &quot; &quot;;    &#125;    std::cout &lt;&lt; std::endl;    // 清空向量并输出    myVector.clear();    std::cout &lt;&lt; &quot;Size of the vector after clearing: &quot; &lt;&lt; myVector.size() &lt;&lt; std::endl;    return 0;&#125;
+
+
+注：输出结果如下所示
+编辑
+2、常用操作 
+编辑
+七、类与继承1、访问权限
+
+​    C++中的访问权限主要分为三种： public 、 private 和 protected 。这些权限决定了类成员（包括数据成员和成员函数）的可访问性。
+
+编辑
+2.类与继承
+
+​    类是一种用户定义的类型，它允许我们将数据（称为属性或成员变量）和操作这些数据的方法（称为成员函数或方法）封装在一起。继承则是一种机制，允许我们基于一个已存在的类（称为基类或父类）来定义一个新的类（称为派生类或子类），继承而来的类可以拥有基类的所有成员（除非它们是私有的），并且还可以添加新的成员或覆盖（重写）基类的成员。
+
+1）类
+class MyClass &#123;  public:      int myNumber; // 成员变量        // 成员函数      void myFunction() &#123;          // 函数体      &#125;  &#125;;
+
+
+2）继承
+
+ DerivedClass继承自BaseClass，并且可以访问BaseClass的公有成员（在这个例子中是show()方法）。DerivedClass还定义了自己的成员函数display()，它首先调用基类的show()方法，然后执行自己的操作。
+
+class BaseClass &#123;  public:      void show() &#123;          cout &lt;&lt; &quot;BaseClass show()&quot; &lt;&lt; endl;      &#125;  &#125;;    class DerivedClass : public BaseClass &#123;  public:      void display() &#123;          // 调用基类的成员函数          show();          cout &lt;&lt; &quot;DerivedClass display()&quot; &lt;&lt; endl;      &#125;  &#125;;
+
+
+3）覆盖（重写）成员函数
+
+​    在派生类中，我们可以定义一个与基类中具有相同名称和参数列表的成员函数，这称为函数覆盖（或重写）。通过这种方式，派生类可以提供特定于该类的实现。 
+
+class BaseClass &#123;  public:      virtual void show() &#123;          cout &lt;&lt; &quot;BaseClass show()&quot; &lt;&lt; endl;      &#125;  &#125;;    class DerivedClass : public BaseClass &#123;  public:      // 覆盖基类的show方法      void show() override &#123; // C++11中可以使用override关键字来明确指示这是一个覆盖          cout &lt;&lt; &quot;DerivedClass show()&quot; &lt;&lt; endl;      &#125;  &#125;;
+
+
+ 4）构造函数和析构函数
+​    构造函数：在创建类的对象时自动调用。派生类的构造函数不能继承基类的构造函数，但可以通过初始化列表显式调用基类的构造函数。
+​    析构函数：在对象生命周期结束时自动调用，用于执行清理操作。派生类的析构函数会自动调用基类的析构函数（无论是否显式调用）。
+3、拓展
+#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;string&gt;#include &lt;iostream&gt;using namespace std;class Car&#123;    //汽车“类”public:  //成员数据  string color;  //颜色  string brand;  //品牌  string type;  //车型  int year;   //年限  //其实也是成员数据，指针变量，指向函数的变量，并非真正的成员函数   void (*printCarInfo)(string color,string brand,string type, int year); //函数指针，指向车介绍函数  void (*carRun)(string type);    //函数指针，指向车运行的函数  void (*carStop)(string type);    //函数指针，执行车停止的函数  void realPrintCarInfo();//声明成员函数&#125;;void Car::realPrintCarInfo() //在类的外部进行成员函数的实现&#123;  string str = &quot;车的品牌是：&quot; + brand      + &quot;,型号是: &quot; + type      + &quot;,颜色是：&quot; + color      + &quot;,上市年限是:&quot; + std::to_string(year);  cout &lt;&lt; str &lt;&lt; endl;&#125;void bwmThreePrintCarInfo(string color,string brand,string type, int year)&#123;  string str = &quot;车的品牌是：&quot; + brand      + &quot;,型号是: &quot; + type      + &quot;,颜色是：&quot; + color      + &quot;,上市年限是:&quot; + std::to_string(year);  cout &lt;&lt; str &lt;&lt; endl;&#125;void A6PrintCarInfo(string color,string brand,string type, int year)&#123;  string str = &quot;车的品牌是：&quot; + brand      + &quot;,型号是: &quot; + type      + &quot;,颜色是：&quot; + color      + &quot;,上市年限是:&quot; + std::to_string(year);  cout &lt;&lt; str &lt;&lt; endl;&#125;int main()&#123;  Car BWMthree;  BWMthree.color = &quot;白色&quot;;  BWMthree.brand = &quot;宝马&quot;;  BWMthree.type  = &quot;3系&quot;;  BWMthree.year  = 2023;  BWMthree.printCarInfo = bwmThreePrintCarInfo; BWMthree.printCarInfo(BWMthree.color,BWMthree.brand,BWMthree.type,BWMthree.year);  BWMthree.realPrintCarInfo();  Car *AodiA6 = new Car(); // AodiA6 = (struct Car*)malloc(sizeof(struct Car));  AodiA6-&gt;color = &quot;黑色&quot;;  AodiA6-&gt;brand = &quot;奥迪&quot;;  AodiA6-&gt;type = &quot;A6&quot;;  AodiA6-&gt;year = 2008;  AodiA6-&gt;printCarInfo = A6PrintCarInfo;  AodiA6-&gt;printCarInfo(AodiA6-&gt;color,AodiA6-&gt;brand,AodiA6-&gt;type,AodiA6-&gt;year);  AodiA6-&gt;realPrintCarInfo();  return 0;&#125;
+
+
+八、指针
+​    在C++中，指针是一个变量，其值为另一个变量的地址。使用指针，可以间接访问或者修改其指向的变量。就像其他变量或常量一样，您必须在使用指针存储其他变量地址之前，对其进行声明。
+
+1、c++的声明 
+int x = 10;int *ptr = &amp;x;
+
+
+​     那么我们应该如何去理解呢，你可以把这个x看作一个快递包裹，那么这个指针就相当于取件码（代码中的ptr对应了取件码，也就是包裹放置的位置），当你去访问这个ptr（位置）并取出来时即为*p（包裹），这是一个间接访问的过程。
+2、指针传递到函数中
+void modify(int *p) &#123;    *p = 20;&#125; int main() &#123;    int x = 10;    modify(&amp;x);    cout &lt;&lt; x;  // 输出20&#125;
+
+
+3、指针作为数组的索引
+int arr[5] = &#123;1, 2, 3, 4, 5&#125;;int *ptr = arr;cout &lt;&lt; *(ptr + 2);  // 输出3，因为ptr指向arr的第一个元素
+
+
+4、指针和字符串索引
+int *p = new int(10);  // 分配内存并初始化为10delete p;              // 释放内存
+
+
+5、指针和结构体
+struct MyStruct &#123;    int x;    int y;&#125;; int main() &#123;    MyStruct s = &#123;10, 20&#125;;    MyStruct *ptr = &amp;s;    cout &lt;&lt; ptr-&gt;x &lt;&lt; &quot;, &quot; &lt;&lt; ptr-&gt;y;  // 输出10, 20&#125;
+
+
+6、指针和类
+class MyClass &#123;public:    int value;&#125;; int main() &#123;    MyClass obj;    MyClass *ptr = &amp;obj;    ptr-&gt;value = 10;    cout &lt;&lt; ptr-&gt;value;  // 输出10&#125;
+
+]]></content>
+      <categories>
+        <category>软件</category>
+      </categories>
+      <tags>
+        <tag>QT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vs调用matlab生成的dll文件</title>
+    <url>/2026/03/11/vs%E8%B0%83%E7%94%A8matlab%E7%94%9F%E6%88%90%E7%9A%84dll%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[1.创建一个 MATLAB 函数创建一个简单的 MATLAB 函数并将其保存为 addTwoNumbers.m：
+function result = addTwoNumbers(a, b)    result = a + b;end
+
+2.编译 MATLAB 函数​	命令行输入deploytool将函数封装成库
+​	配置环境变量，高级系统设置-&gt;环境变量-&gt;系统变量，将D:\MATLAB\R2024b\bin\win64完成后重启
+4.VS配置环境1）工程设置①VC++目录
+​	包含目录 ，按照matlab安装目录修改，D:\MATLAB\R2024b\extern\include;
+​	包含库目录 ，按照matlab安装目录修改，D:\MATLAB\R2024b\extern\lib\win64\microsoft
+②连接器
+​	连接器-&gt;常规-&gt;附加库目录，上一步的库目录，D:\MATLAB\R2024b\extern\lib\win64\microsoft
+​	连接器-&gt;输入-&gt;添加依赖项
+libmex.liblibmx.liblibmat.libmclmcrrt.lib自己生成的模型.lib
+
+2）复制文件到相应的文件夹下​	将生成的.dll文件放入D:\MATLAB\R2024b\bin\win64;​	将生成的.h文件放入D:\MATLAB\R2024b\extern\include；​	将生成的.lib文件放入D:\MATLAB\R2024b\extern\lib\win64\microsoft;
+3）拖动文件到工程目录中
+4.在 C++ 中使用生成的共享库#include &lt;iostream&gt;
+#include &quot;addTwoNumbersLib.h&quot;
+#include &quot;mclmcrrt.h&quot;
+#include &quot;mclcppclass.h&quot;
+
+int main() {
+    // 初始化 MATLAB 运行时
+    if (!mclInitializeApplication(NULL, 0)) {
+        std::cerr &lt;&lt; &quot;无法初始化应用程序。&quot; &lt;&lt; std::endl;
+        return -1;
+    }
+
+    if (!addTwoNumbersLibInitialize()) {
+        std::cerr &lt;&lt; &quot;无法初始化库。&quot; &lt;&lt; std::endl;
+        return -1;
+    }
+    
+    try {
+        // 创建 mwArray 对象作为输入
+        mwArray a(5.0);
+        mwArray b(10.0);
+    
+        // 调用 MATLAB 函数
+        mwArray result;
+        addTwoNumbers(1, result, a, b);
+    
+        // 显示结果
+        std::cout &lt;&lt; &quot;结果: &quot; &lt;&lt; result &lt;&lt; std::endl;
+    } catch (const mwException&amp; e) {
+        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;
+        return -1;
+    }
+    
+    // 终止 MATLAB 运行时
+    addTwoNumbersLibTerminate();
+    
+    mclTerminateApplication();
+    return 0;
+
+}
+
+
+]]></content>
+      <categories>
+        <category>软件</category>
+      </categories>
+      <tags>
+        <tag>MATLAB</tag>
+      </tags>
+  </entry>
+</search>
