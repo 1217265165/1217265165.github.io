@@ -1,8 +1,6 @@
 /* Worker API base URL fallback list (same-origin first) */
 var WORKER_BASE_FALLBACKS = [
-  'https://1217265165.m1217265165.workers.dev',
-  'https://1217265165.1217265165.workers.dev',
-  'https://1217265165.workers.dev'
+  'https://1217265165.m1217265165.workers.dev'
 ];
 
 (function () {

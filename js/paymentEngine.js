@@ -4,9 +4,7 @@
   var DEFAULT_CONFIG = {
     mode: 'STRIPE',
     apiBases: [
-      'https://1217265165.m1217265165.workers.dev',
-      'https://1217265165.1217265165.workers.dev',
-      'https://1217265165.workers.dev'
+      'https://1217265165.m1217265165.workers.dev'
     ],
     vmq: {
       baseUrl: 'https://your-cpolar-subdomain.cpolar.cn',
