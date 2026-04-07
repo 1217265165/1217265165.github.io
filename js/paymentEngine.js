@@ -3,6 +3,11 @@
 
   var DEFAULT_CONFIG = {
     mode: 'STRIPE',
+    apiBases: [
+      'https://1217265165.m1217265165.workers.dev',
+      'https://1217265165.1217265165.workers.dev',
+      'https://1217265165.workers.dev'
+    ],
     vmq: {
       baseUrl: 'https://your-cpolar-subdomain.cpolar.cn',
       createOrderPath: '/api/vmq/create-order',
@@ -11,11 +16,44 @@
       staticQr: '/img/image/qrcode-alipay.png'
     },
     stripe: {
-      checkoutPath: '/api/create-checkout-session'
+      apiBase: '',
+      checkoutPath: '/api/create-checkout-session',
+      timeoutMs: 12000
     }
   };
 
-  var PAYMENT_CONFIG = window.PAYMENT_CONFIG || DEFAULT_CONFIG;
+  function mergeFlat(base, extra) {
+    var output = {};
+    var key;
+
+    for (key in base) {
+      if (Object.prototype.hasOwnProperty.call(base, key)) {
+        output[key] = base[key];
+      }
+    }
+
+    for (key in (extra || {})) {
+      if (Object.prototype.hasOwnProperty.call(extra, key)) {
+        output[key] = extra[key];
+      }
+    }
+
+    return output;
+  }
+
+  function normalizeConfig(input) {
+    var config = input || {};
+    var hasApiBases = Array.isArray(config.apiBases) && config.apiBases.length > 0;
+
+    return {
+      mode: config.mode || DEFAULT_CONFIG.mode,
+      apiBases: hasApiBases ? config.apiBases.slice() : DEFAULT_CONFIG.apiBases.slice(),
+      vmq: mergeFlat(DEFAULT_CONFIG.vmq, config.vmq),
+      stripe: mergeFlat(DEFAULT_CONFIG.stripe, config.stripe)
+    };
+  }
+
+  var PAYMENT_CONFIG = normalizeConfig(window.PAYMENT_CONFIG);
   window.PAYMENT_CONFIG = PAYMENT_CONFIG;
 
   function normalizeMode(value) {
@@ -28,6 +66,65 @@
 
   function normalizeBase(url) {
     return String(url || '').replace(/\/$/, '');
+  }
+
+  function appendBaseCandidates(target, candidates) {
+    if (!Array.isArray(candidates)) {
+      return;
+    }
+
+    candidates.forEach(function (base) {
+      if (typeof base === 'string' && base.trim()) {
+        target.push(normalizeBase(base));
+      }
+    });
+  }
+
+  function ensureApiPath(path) {
+    var value = String(path || '/api/create-checkout-session');
+    return value.charAt(0) === '/' ? value : '/' + value;
+  }
+
+  function isAbsoluteHttpUrl(value) {
+    return /^https?:\/\//i.test(String(value || ''));
+  }
+
+  function getStripeCheckoutTargets() {
+    var stripe = PAYMENT_CONFIG.stripe || {};
+    var checkoutPath = stripe.checkoutPath || '/api/create-checkout-session';
+
+    if (isAbsoluteHttpUrl(checkoutPath)) {
+      return [checkoutPath];
+    }
+
+    var path = ensureApiPath(checkoutPath);
+    var bases = [];
+    var host = (window && window.location && window.location.hostname) || '';
+    var isGithubPages = /github\.io$/i.test(host);
+
+    if (!isGithubPages && window && window.location && window.location.origin) {
+      bases.push(normalizeBase(window.location.origin));
+    }
+
+    appendBaseCandidates(bases, window && window.SHOP_API_BASES);
+    appendBaseCandidates(bases, PAYMENT_CONFIG.apiBases);
+    appendBaseCandidates(bases, [stripe.apiBase]);
+
+    var uniq = [];
+    bases.forEach(function (base) {
+      if (!base) return;
+      if (uniq.indexOf(base) === -1) {
+        uniq.push(base);
+      }
+    });
+
+    if (!uniq.length && window && window.location && window.location.origin) {
+      uniq.push(normalizeBase(window.location.origin));
+    }
+
+    return uniq.map(function (base) {
+      return base + path;
+    });
   }
 
   function withTimeout(promiseFactory, timeoutMs) {
@@ -139,33 +236,48 @@
       });
   }
 
-  function createStripeCheckout(productId) {
+  async function createStripeCheckout(productId) {
     var stripe = PAYMENT_CONFIG.stripe || {};
-    var checkoutPath = stripe.checkoutPath || '/api/create-checkout-session';
+    var timeoutMs = Number(stripe.timeoutMs || 12000);
+    var targets = getStripeCheckoutTargets();
+    var errors = [];
 
-    return fetch(checkoutPath, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({ productId: productId })
-    })
-      .then(function (response) {
-        return response.text().then(function (text) {
-          var data = {};
-          try {
-            data = text ? JSON.parse(text) : {};
-          } catch {
-            data = { error: 'Stripe 返回了非 JSON 响应' };
-          }
+    for (var i = 0; i < targets.length; i += 1) {
+      var checkoutUrl = targets[i];
 
-          if (!response.ok || !data.url) {
-            throw new Error(data.error || ('创建支付会话失败（HTTP ' + response.status + '）'));
-          }
+      try {
+        var response = await withTimeout(function () {
+          return fetch(checkoutUrl, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({ productId: productId })
+          });
+        }, timeoutMs);
 
-          return data;
-        });
-      });
+        var text = await response.text();
+        var data = {};
+
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch {
+          data = { error: 'Stripe 返回了非 JSON 响应' };
+        }
+
+        if (!response.ok || !data.url) {
+          var reason = data.error || (!response.ok ? 'HTTP ' + response.status : '缺少跳转链接');
+          errors.push(checkoutUrl + ' => ' + reason);
+          continue;
+        }
+
+        return data;
+      } catch (error) {
+        errors.push(checkoutUrl + ' => ' + (error && error.message ? error.message : 'network error'));
+      }
+    }
+
+    throw new Error('创建支付会话失败：' + (errors.join(' | ') || '未找到可用接口'));
   }
 
   function openVmqModal(orderInfo, product) {

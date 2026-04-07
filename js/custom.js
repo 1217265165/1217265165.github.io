@@ -1,5 +1,9 @@
 /* Worker API base URL fallback list (same-origin first) */
-var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
+var WORKER_BASE_FALLBACKS = [
+  'https://1217265165.m1217265165.workers.dev',
+  'https://1217265165.1217265165.workers.dev',
+  'https://1217265165.workers.dev'
+];
 
 (function () {
   var SOFTWARE_TARGET_PATH = '/equipment/';
@@ -169,6 +173,18 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
     return String(base || '').replace(/\/$/, '');
   }
 
+  function appendBaseCandidates(target, candidates) {
+    if (!Array.isArray(candidates)) {
+      return;
+    }
+
+    candidates.forEach(function (base) {
+      if (typeof base === 'string' && base.trim()) {
+        target.push(normalizeBase(base));
+      }
+    });
+  }
+
   function isJsonLikeResponse(response, text) {
     var contentType = (response && response.headers && response.headers.get('content-type')) || '';
     if (/application\/json|\+json/i.test(contentType)) {
@@ -189,16 +205,23 @@ var WORKER_BASE_FALLBACK = 'https://1217265165.m1217265165.workers.dev';
       bases.push(normalizeBase(window.location.origin));
     }
 
-    if (window && Array.isArray(window.SHOP_API_BASES)) {
-      window.SHOP_API_BASES.forEach(function (base) {
-        if (typeof base === 'string' && base.trim()) {
-          bases.push(normalizeBase(base));
-        }
-      });
+    appendBaseCandidates(bases, window && window.SHOP_API_BASES);
+
+    if (window && window.PAYMENT_CONFIG && Array.isArray(window.PAYMENT_CONFIG.apiBases)) {
+      appendBaseCandidates(bases, window.PAYMENT_CONFIG.apiBases);
     }
 
-    // Always keep worker as reliable backend endpoint.
-    bases.push(normalizeBase(WORKER_BASE_FALLBACK));
+    if (
+      window &&
+      window.PAYMENT_CONFIG &&
+      window.PAYMENT_CONFIG.stripe &&
+      typeof window.PAYMENT_CONFIG.stripe.apiBase === 'string'
+    ) {
+      appendBaseCandidates(bases, [window.PAYMENT_CONFIG.stripe.apiBase]);
+    }
+
+    // Always keep worker fallback endpoints for github.io deployment.
+    appendBaseCandidates(bases, WORKER_BASE_FALLBACKS);
 
     var uniq = [];
     bases.forEach(function (base) {
