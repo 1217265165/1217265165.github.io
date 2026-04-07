@@ -60,7 +60,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2026-04-07 19:41:56',
+  postUpdate: '2026-04-07 21:02:12',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -236,6 +236,20 @@
 </section>
 
 <script>
+    (function () {
+        var workerShopOrigin = 'https://1217265165.m1217265165.workers.dev';
+        var host = (window.location && window.location.hostname) || '';
+        var path = (window.location && window.location.pathname) || '';
+        var isGithub = /github\.io$/i.test(host);
+        var isShopRoot = /^\/shop\/?$/i.test(path);
+        var bypass = window.location.search.indexOf('no_worker_redirect=1') !== -1;
+
+        if (isGithub && isShopRoot && !bypass) {
+            var target = workerShopOrigin + '/shop/' + (window.location.search || '') + (window.location.hash || '');
+            window.location.replace(target);
+        }
+    })();
+
     window.SHOP_API_BASES = [
         'https://1217265165.m1217265165.workers.dev'
     ];
